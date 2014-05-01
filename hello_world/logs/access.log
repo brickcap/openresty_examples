@@ -67,3 +67,5 @@
 127.0.0.1 - - [01/May/2014:17:48:45 +0530] "GET /by_file HTTP/1.1" 200 46 "-" "curl/7.35.0"
 127.0.0.1 - - [01/May/2014:17:49:17 +0530] "GET /by_file HTTP/1.1" 200 46 "-" "curl/7.35.0"
 127.0.0.1 - - [01/May/2014:17:49:43 +0530] "GET /by_file HTTP/1.1" 200 39 "-" "curl/7.35.0"
+127.0.0.1 - - [01/May/2014:17:56:10 +0530] "GET /by_file HTTP/1.1" 200 39 "-" "Mozilla/5.0 (X11; Linux i686 (x86_64)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36"
+127.0.0.1 - - [01/May/2014:17:56:11 +0530] "GET /favicon.ico HTTP/1.1" 200 31 "-" "Mozilla/5.0 (X11; Linux i686 (x86_64)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36"
