@@ -1,1 +1,34 @@
 2014/05/01 16:14:21 [emerg] 4002#0: open() "/home/akshat/Repo/openresty_examples/hello_world/conf/nginx.conf" failed (2: No such file or directory)
+2014/05/01 16:51:27 [emerg] 4646#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 16:51:27 [emerg] 4646#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 16:51:27 [emerg] 4646#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 16:51:27 [emerg] 4646#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 16:51:27 [emerg] 4646#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 16:51:27 [emerg] 4646#0: still could not bind()
+2014/05/01 17:11:42 [emerg] 4898#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:11:42 [emerg] 4898#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:11:42 [emerg] 4898#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:11:42 [emerg] 4898#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:11:42 [emerg] 4898#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:11:42 [emerg] 4898#0: still could not bind()
+2014/05/01 17:13:05 [notice] 4916#0: signal process started
+2014/05/01 17:15:58 [notice] 4953#0: signal process started
+2014/05/01 17:29:21 [emerg] 5340#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:29:21 [emerg] 5340#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:29:21 [emerg] 5340#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:29:21 [emerg] 5340#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:29:31 [notice] 5342#0: signal process started
+2014/05/01 17:33:16 [notice] 5384#0: signal process started
+2014/05/01 17:36:53 [notice] 5439#0: signal process started
+2014/05/01 17:37:06 [notice] 5447#0: signal process started
+2014/05/01 17:37:07 [notice] 5450#0: signal process started
+2014/05/01 17:43:07 [notice] 5534#0: signal process started
+2014/05/01 17:43:23 [notice] 5541#0: signal process started
+2014/05/01 17:44:02 [notice] 5552#0: signal process started
+2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
+2014/05/01 17:49:30 [emerg] 5650#0: still could not bind()
+2014/05/01 17:49:40 [notice] 5652#0: signal process started
