@@ -1,0 +1,1 @@
+2014/05/01 16:14:21 [emerg] 4002#0: open() "/home/akshat/Repo/openresty_examples/hello_world/conf/nginx.conf" failed (2: No such file or directory)
