@@ -32,3 +32,4 @@
 2014/05/01 17:49:30 [emerg] 5650#0: bind() to 0.0.0.0:8080 failed (98: Address already in use)
 2014/05/01 17:49:30 [emerg] 5650#0: still could not bind()
 2014/05/01 17:49:40 [notice] 5652#0: signal process started
+2014/06/18 22:01:07 [alert] 4505#0: lua_code_cache is off; this will hurt performance in ./conf/nginx.conf:17

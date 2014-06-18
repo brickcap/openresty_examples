@@ -23,4 +23,5 @@ just refrenced. This is a desirable effect and we would not want to reload
 modules on every request. So when would you want to turn the caching off? 
 Yep , you guessed it during the development phase. When caching is turned off 
 on every request the module is reloaded so you can just edit and save your file and 
-just refresh to see the changes. 
+just refresh to see the changes. Just be sure to turn the lua_code_cache off in production.
+
