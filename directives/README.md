@@ -25,3 +25,5 @@ Yep , you guessed it during the development phase. When caching is turned off
 on every request the module is reloaded so you can just edit and save your file and 
 just refresh to see the changes. Just be sure to turn the lua_code_cache off in production.
 
+**Note** as you might have already expeced lua_code_cache works only for
+`content_by_lua_file`  directive. It will have no effect upon `content_by_lua` directive.
