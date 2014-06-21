@@ -17,13 +17,59 @@ chapter. Here we will take a look at a few more intersting ones
 
 ####lua_code_cache 
 
-This directives tuns the caching of lua modules on or off. By default this  
+This directives tuns the caching of lua modules on or off. By default the  
 the caching is turned on so that the lua modules are loaded once and then 
 just refrenced. This is a desirable effect and we would not want to reload 
 modules on every request. So when would you want to turn the caching off? 
 Yep , you guessed it during the development phase. When caching is turned off 
 on every request the module is reloaded so you can just edit and save your file and 
-just refresh to see the changes. Just be sure to turn the lua_code_cache off in production.
+just refresh to see the changes. Just be sure to turn the lua_code_cache off in production. 
 
-**Note** as you might have already expeced lua_code_cache works only for
+
+Let us test this by turning lua_code_cache off in our hello world example.
+After the changes our configuration file should look something like this. 
+
+```
+worker_processes  1;
+error_log /dev/stderr;
+events {
+    worker_connections 1024;
+}
+http {
+    server {
+        listen 8080;
+
+	location /by_file {
+        default_type text/html;
+		lua_code_cache off; --only for development
+        content_by_lua_file /lua/hello_world.lua; --update it with path to your lua file
+        }
+
+    }
+}
+
+```
+
+Now lets run this by 
+
+`nginx -p 'pwd' -c conf/nginx.conf` -- use -s reload if you are already running nginx. 
+
+and then `curl http://localhost:8080/`
+
+you should see
+
+> <p> hello world </p> in response
+
+Now edit the hello_world.lua to
+
+`ngx.say("<b>hello world</b>");` 
+
+and on `curl http://localhost:808/` you should see the response
+
+><b>hello world</b>
+
+This makes our workflow of developing  ngx_lua applications much smoother.
+
+**Note** as you might have already guessed lua_code_cache works only for
 `content_by_lua_file`  directive. It will have no effect upon `content_by_lua` directive.
+
