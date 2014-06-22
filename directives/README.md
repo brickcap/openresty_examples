@@ -1,29 +1,44 @@
-Nginx supplied it's own mini programming language in the form of directives. 
-These directives we either block level or simple. Simple directives were 
-structured as the name of the directive and the name of the parameters, 
-the directive and parameters were separated by a space and the end of the 
-directive was marked by a `;`. The block level directives were similar with
-the only difference being instead of ending it with a `;` it contained `{` and
-`}` brackets. Within a block level directive there could be one of multiple 
+Nginx comes with it's own mini programming language in which directives form the basic constructs. 
+These directives are either block level or simple. Simple directives are 
+structured as the name of the directive and the name of the parameters. 
+The directive name and the parameters are separated by a space and the end of the 
+directive is marked by a `;`. The block level directives were similar with
+the only difference being  it was marked by `{` and
+`}` brackets. Within a block level directive there could be one or more 
 simple directives.These directives made up the configuration files.
+
+```
+#location is a block level directive
+
+location /{
+#proxy_pass is a simple directive
+proxy_pass http://localhost:5984/; 
+
+}
+
+
+```
+
 
 nginx_lua keeps the same structuring of the configuration files. 
 As we saw in the last chapter there is little difference between
-a vanilla nginx configuration and a nginx_lua configuration. In fact almost
+a vanilla nginx configuration and an nginx_lua configuration. In fact almost
 all of the nginx directives can be used as usual in an nginx_lua configuration
 file. However nginx_lua adds several new directives that enhances the configurability
-of nginx. We already looked at `content_by_lua` and `content_by_lua_file` in the last
+of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
 chapter. Here we will take a look at a few more intersting ones
 
 ####lua_code_cache 
 
-This directives tuns the caching of lua modules on or off. By default the  
+This directive turns the caching of lua modules on or off. By default the  
 the caching is turned on so that the lua modules are loaded once and then 
-just refrenced. This is a desirable effect and we would not want to reload 
+just reused. This is a desirable effect and we would not want to reload 
 modules on every request. So when would you want to turn the caching off? 
-Yep , you guessed it during the development phase. When caching is turned off 
-on every request the module is reloaded so you can just edit and save your file and 
-just refresh to see the changes. Just be sure to turn the lua_code_cache off in production. 
+When we are in the process of writing our programes. It can be a pain 
+to edit the configuration file, save it and then do an `nginx -s reload`. 
+When caching is turned off on every request the module is reloaded 
+on every request so you can just edit, save your file and then 
+refresh to see the changes. Just be sure to turn the lua_code_cache off in production. 
 
 
 Let us test this by turning lua_code_cache off in our hello world example.
@@ -76,15 +91,18 @@ This makes our workflow of developing  ngx_lua applications much smoother.
 
 #### init_by_lua 
 
-init_by lua directive runs the lua code  specified by the parameter string on a global level. 
-This is most useful when you want to register lua global variables or start lua modules during
-the nginx server start up.
+init_by lua directive runs the lua code
+specified by the parameter string on a global level.  
+This is most useful when you want to register 
+lua global variables or start lua modules during 
+the nginx server start up. 
 
 Before we take a look at the example of init_by_lua a friendly warning.
 
 Refrain from using lua global variables. For most variables you should use a `local` 
 keyword to make lua variables local to it's scope. And remember any variable declared
 without a `local` keyword is global in lua.
+
 
 ```
 local cat = "meow" -- use this form most of the time
@@ -101,27 +119,35 @@ to declare the variable global and even then init_by_lua should be the only plac
 where you do it.
 
 
-`init_by_lua` has a variant in `init_by_lua_file` where you can supply a file
-containing the lua code that will be run in a global context. Everything that we talked about in `init_by_lua`
+`init_by_lua` has a variant in `init_by_lua_file` where you can supply a file 
+containing the lua code that will be run in a global context. 
+Everything that we talked about in `init_by_lua` 
 also applies to `init_by_lua_file`. 
 
 
 ####set_by_lua 
 
-set_by_lua directive is equivalent to nginx's [set](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#set)
-directive in the http_rewrite_module. Quite predictably set was use to 'set' the value for a variable.
-set_by_lua allows you to set the variable by evaluating a lua code string.
+set_by_lua directive is equivalent to nginx's 
+set commands.  
+directive in the http_rewrite_module. 
+Quite predictably set is used in nginx to 'set' the value for a variable.  
+Simillarly set_by_lua allows you to set a variable by evaluating a lua code string. 
 
 
-Once more set_by_lua has a _file alternative in `set_by_lua_file` that allows you to set a variable
-by executing the code in lua file.
+Once more set_by_lua has a _file alternative in `set_by_lua_file` 
+that allows you to set a variable 
+by executing the code in lua file. 
 
-**Note** set_by_lua blocks the nginx's event loop during it's execution therefore long time consuming 
-code sequence are best avoided here. So while a few arithmetic computations are fine loops should be 
-avoided.
+**Note** `set_by_lua blocks` the nginx's event loop during 
+it's execution therefore long time consuming 
+code sequences are best avoided here.
+So while a few arithmetic computations are fine loops should be 
+avoided. 
 
-`set_by_lua` works well with nginx's set command so the two can be used interchangeably. The directives
-will run in the order in which they appear in the code.
+`set_by_lua` works well with nginx's `set`
+command so the two can be used interchangeably. 
+The directives will run in the order in which they appear in the code.
+Works with set in HttpRewriteModule,  HttpSetMiscModule, and HttpArrayVarModule.
 
 
 
@@ -129,16 +155,20 @@ will run in the order in which they appear in the code.
 
 #### content_by_lua
 
-We already discussed this directive in the hello_chapter. But now that we have taken a look at
-at how the directives work we can see content_by_lua in a different light.  
+We already discussed this directive in the hello_ world chapter. 
+But now that we have more understanding of 
+how the directives work we can see content_by_lua in a different light.  
 
 Unlike the set_by_lua command that blocks the nginx's event loop content_by_lua directive
-runs in it's own spawned coroutine. Which means that it does not block the nginx'e event loop
+runs in it's own spawned coroutine. Which means that it does not block the nginx's event loop
 and runs in a seperate environment. content_by_lua directive belongs to a special class of
-directives called the content handler directives. They execute only in the context of `location`
-directive (which if you recall our discussion at the beginning of this chapter is a block level directive).
+directives called the content handler 
+( they are not actually called that but you will see what I mean in a minute) directives. 
+They execute only in the context of `location` 
+directive (which if you recall our discussion at the beginning 
+of this chapter is a block level directive).
 
-Anyway, the location directive captures the request to a particular handle and
+Anyway, the location directive captures the request for a matching url and
 then leaves it to the content handler to service the request. For instance
 
 ```
@@ -149,8 +179,28 @@ root /data/me;
 
 
 ```
-if a request is made to `/me` handle the files in `/data/me` would be served.
-A location block should have one content handler only. Do not mix nginx's
-default content handlers like proxy_pass or directory mappers with ngx_lua's  content_by_lua.
+
+if a request is made to `/me` handle the content in `/data/me` would be served.
+A location block should have only one content handler. Do not mix nginx's
+default content handlers like proxy_pass or directory mappers with ngx_lua's content_by_lua.
 
 
+####rewirte_by_lua
+
+ngnx_lua equivalent of nginx's 
+[HttpRewriteModule](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html). 
+Like the `content_by_lua` directive `rewrite_by_lua` runs in a spawned coroutine.
+The important thing to keep in mind here is that the directive always runs after the
+standard `http_rewrite_module`. So if you are using both keep that in mind.
+
+Remember how the `set_by_lua` directive was blocking?
+
+Well if you are using `set_by_lua` for the `set` in `http_rewrite_module` 
+then you can safely replace it using `rewrite_by_lua`. It is non blocking. 
+
+
+
+####access_by_lua
+
+
+###other directives
