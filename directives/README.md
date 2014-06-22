@@ -184,6 +184,7 @@ if a request is made to `/me` handle the content in `/data/me` would be served.
 A location block should have only one content handler. Do not mix nginx's
 default content handlers like proxy_pass or directory mappers with ngx_lua's content_by_lua.
 
+And yeah there is a `content_by_lua_file` :)
 
 ####rewirte_by_lua
 
@@ -195,12 +196,35 @@ standard `http_rewrite_module`. So if you are using both keep that in mind.
 
 Remember how the `set_by_lua` directive was blocking?
 
-Well if you are using `set_by_lua` for the `set` in `http_rewrite_module` 
+Well you can mitigate that to some extent now 
+If you are using `set_by_lua` for the `set` in `http_rewrite_module` 
 then you can safely replace it using `rewrite_by_lua`. It is non blocking. 
 
+About `rewrite_by_lua_file` : .....
+
+It's same as `rewrite_by_lua` except that it 
+executes lua code from a file. 
 
 
 ####access_by_lua
 
+ngx_lua equivalent of
+[HttpAccessModule](http://nginx.org/en/docs/http/ngx_http_access_module.html)
+
+Two points to not here
+
+1. It runs in a seperate coroutine.
+
+2. It runs after the standard nginx  `http_access module` so if you are mixing the two
+keep that in mind.
+
+And there is a `access_by_lua_file`
+
 
 ###other directives
+
+We are almost at the end of the chapter. If you ahve made is this far you have learnt 
+most of what there is to learn about ngx_lua directives. Before we move on let us 
+make a few obeservations about the ngx_lua directives.
+
+
