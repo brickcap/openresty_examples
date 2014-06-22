@@ -11,7 +11,7 @@ nginx_lua keeps the same structuring of the configuration files.
 As we saw in the last chapter there is little difference between
 a vanilla nginx configuration and a nginx_lua configuration. In fact almost
 all of the nginx directives can be used as usual in an nginx_lua configuration
-file. However nginx_lua adds several new directives that enhances the configure-ability
+file. However nginx_lua adds several new directives that enhances the configurability
 of nginx. We already looked at `content_by_lua` and `content_by_lua_file` in the last
 chapter. Here we will take a look at a few more intersting ones
 
@@ -94,14 +94,63 @@ dog = "woof" -- avoid this form except for when it makes sense
 
 When does it make sense to use global varialbes?
 
-Suppose you want to use a module that parses JSON which will be used by 
+Suppose you want to use a module that parses JSON which will be used  
 in many handlers, or a database client that will be used in many handlers
 or any other module that will be used across many handlers then it makes sense
 to declare the variable global and even then init_by_lua should be the only place
-that you do it.
+where you do it.
+
 
 `init_by_lua` has a variant in `init_by_lua_file` where you can supply a file
-containing the lua code that will be run. Everything that we talked about in `init_by_lua`
+containing the lua code that will be run in a global context. Everything that we talked about in `init_by_lua`
 also applies to `init_by_lua_file`. 
+
+
+####set_by_lua 
+
+set_by_lua directive is equivalent to nginx's [set](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#set)
+directive in the http_rewrite_module. Quite predictably set was use to 'set' the value for a variable.
+set_by_lua allows you to set the variable by evaluating a lua code string.
+
+
+Once more set_by_lua has a _file alternative in `set_by_lua_file` that allows you to set a variable
+by executing the code in lua file.
+
+**Note** set_by_lua blocks the nginx's event loop during it's execution therefore long time consuming 
+code sequence are best avoided here. So while a few arithmetic computations are fine loops should be 
+avoided.
+
+`set_by_lua` works well with nginx's set command so the two can be used interchangeably. The directives
+will run in the order in which they appear in the code.
+
+
+
+
+
+#### content_by_lua
+
+We already discussed this directive in the hello_chapter. But now that we have taken a look at
+at how the directives work we can see content_by_lua in a different light.  
+
+Unlike the set_by_lua command that blocks the nginx's event loop content_by_lua directive
+runs in it's own spawned coroutine. Which means that it does not block the nginx'e event loop
+and runs in a seperate environment. content_by_lua directive belongs to a special class of
+directives called the content handler directives. They execute only in the context of `location`
+directive (which if you recall our discussion at the beginning of this chapter is a block level directive).
+
+Anyway, the location directive captures the request to a particular handle and
+then leaves it to the content handler to service the request. For instance
+
+```
+location /me
+{
+root /data/me;
+}
+
+
+```
+if a request is made to `/me` handle the files in `/data/me` would be served.
+A location block should have one content handler only. Do not mix nginx's
+default content handlers like proxy_pass or directory mappers with ngx_lua's  content_by_lua.
 
 
