@@ -221,10 +221,14 @@ keep that in mind.
 And there is a `access_by_lua_file`
 
 
-###other directives
+By now you have probably understood what lua directives are and how 
+they work. There are a few more directives: some of them are utilities 
+and some for tweaking the ngx_lua behaviour.
 
-We are almost at the end of the chapter. If you ahve made is this far you have learnt 
-most of what there is to learn about ngx_lua directives. Before we move on let us 
-make a few obeservations about the ngx_lua directives.
+The ones I have covered though are  ones that you will
+be using most of the time. So instead of going on and on about the directives
+I will leave a [link to the reference](http://wiki.nginx.org/HttpLuaModule#Directives)
+and you can study them at your convenience.  
 
+For now we move on to the meatier stuff. The ngx_lua API.
 
