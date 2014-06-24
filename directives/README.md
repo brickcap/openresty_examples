@@ -145,7 +145,23 @@ where you do it.
 containing the lua code that will be run in a global context. 
 Everything that we talked about in `init_by_lua` 
 also applies to `init_by_lua_file`. 
+ 
 
+```
+   location /json{
+       content_by_lua '
+        ngx.say(cjson.encode({message="hello world",another_message="goodbye world"}));
+            ';
+   }
+
+
+```
+
+In the location block above we are using `cjson` global
+variable that was declared in an `init_by_lua_file` to encode
+lua tables in json. `cjson` was a good contender for the global
+varibale declaration because we are going to be using it in many
+location blocks. 
 
 ####set_by_lua 
 
