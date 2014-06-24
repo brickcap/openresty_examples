@@ -93,7 +93,7 @@ http {
 
 	location /by_file {
         default_type text/html;
-        content_by_lua_file /lua/hello_world.lua;
+        content_by_lua_file ./lua/hello_world.lua;
         }
 
     }

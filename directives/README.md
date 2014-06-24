@@ -59,7 +59,7 @@ http {
 	location /by_file {
         default_type text/html;
 		lua_code_cache off; #only for development
-        content_by_lua_file /lua/hello_world.lua; #update it with path to your lua file
+        content_by_lua_file ./lua/hello_world.lua; #update it with path to your lua file
         }
 
     }
