@@ -20,10 +20,10 @@ proxy_pass http://localhost:5984/;
 ```
 
 
-nginx_lua keeps the same structuring of the configuration files. 
+`nginx_lua` keeps the same structuring of the configuration files. 
 As we saw in the last chapter there is little difference between
 a vanilla nginx configuration and an nginx_lua configuration. In fact almost
-all of the nginx directives can be used as usual in an nginx_lua configuration
+all of the nginx directives can be used as usual in an `nginx_lua` configuration
 file. However nginx_lua adds several new directives that enhances the configurability
 of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
 chapter. Here we will take a look at a few more intersting ones
