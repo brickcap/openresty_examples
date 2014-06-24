@@ -38,10 +38,11 @@ When we are in the process of writing our programes. It can be a pain
 to edit the configuration file, save it and then do an `nginx -s reload`. 
 When caching is turned off on every request the module is reloaded 
 on every request so you can just edit, save your file and then 
-refresh to see the changes. Just be sure to turn the lua_code_cache off in production. 
+refresh to see the changes. Just be sure to turn the `lua_code_cache` 
+off in production. 
 
 
-Let us test this by turning lua_code_cache off in our hello world example.
+Let us test this by turning `lua_code_cache` off in our hello world example.
 After the changes our configuration file should look something like this. 
 
 ```
