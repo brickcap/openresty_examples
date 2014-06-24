@@ -165,14 +165,13 @@ location blocks.
 
 ####set_by_lua 
 
-set_by_lua directive is equivalent to nginx's 
+`set_by_lua` directive is equivalent to nginx's 
 set commands.  
-directive in the http_rewrite_module. 
 Quite predictably set is used in nginx to 'set' the value for a variable.  
-Simillarly set_by_lua allows you to set a variable by evaluating a lua code string. 
+Simillarly `set_by_lua` allows you to set a variable by evaluating a lua code string. 
 
 
-Once more set_by_lua has a _file alternative in `set_by_lua_file` 
+Once more `set_by_lua` has a _file alternative in `set_by_lua_file` 
 that allows you to set a variable 
 by executing the code in lua file. 
 
@@ -188,7 +187,17 @@ The directives will run in the order in which they appear in the code.
 Works with set in HttpRewriteModule,  HttpSetMiscModule, and HttpArrayVarModule.
 
 
+```
 
+ location /set_by_lua{
+	    set $nvar 20;
+	    set_by_lua $lvar 'return ngx.var.nvar+1';
+	    echo "$nvar,$lvar";
+    }
+       
+
+
+```
 
 
 #### content_by_lua
@@ -238,10 +247,16 @@ Well you can mitigate that to some extent now
 If you are using `set_by_lua` for the `set` in `http_rewrite_module` 
 then you can safely replace it using `rewrite_by_lua`. It is non blocking. 
 
+`rewrite_by_lua` can make api calls 
+(we will see how to make api calls in the next chapter). 
+So you can issue dynamic rewrites
+based on the response returned from your database etc. 
+
 About `rewrite_by_lua_file` : .....
 
 It's same as `rewrite_by_lua` except that it 
 executes lua code from a file. 
+
 
 
 ####access_by_lua
@@ -255,6 +270,8 @@ Two points to not here
 
 2. It runs after the standard nginx  `http_access module` so if you are mixing the two
 keep that in mind.
+
+Like `rewrite_by_lua` it can make api calls. 
 
 And there is a `access_by_lua_file`
 
