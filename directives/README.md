@@ -34,11 +34,12 @@ This directive turns the caching of lua modules on or off. By default the
 the caching is turned on so that the lua modules are loaded once and then 
 just reused. This is a desirable effect and we would not want to reload 
 modules on every request. So when would you want to turn the caching off? 
-When we are in the process of writing our programes. It can be a pain 
-to edit the configuration file, save it and then do an `nginx -s reload`. 
-When caching is turned off on every request the module is reloaded 
+During the developmental phase. It can be a pain 
+to edit the configuration file, save it and then do an `nginx -s reload`
+over and over agin. 
+When caching is turned off  the module is reloaded 
 on every request so you can just edit, save your file and then 
-refresh to see the changes. Just be sure to turn the `lua_code_cache` 
+"refresh" to see the changes. Just be sure to turn the `lua_code_cache` 
 off in production. 
 
 
@@ -57,8 +58,8 @@ http {
 
 	location /by_file {
         default_type text/html;
-		lua_code_cache off; --only for development
-        content_by_lua_file /lua/hello_world.lua; --update it with path to your lua file
+		lua_code_cache off; #only for development
+        content_by_lua_file /lua/hello_world.lua; #update it with path to your lua file
         }
 
     }
