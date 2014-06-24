@@ -69,9 +69,16 @@ http {
 
 Now lets run this by 
 
-`nginx -p 'pwd' -c conf/nginx.conf` -- use -s reload if you are already running nginx. 
+`nginx -p 'pwd' -c conf/nginx.conf`
 
-and then `curl http://localhost:8080/`
+You should see an alert message displayed on your console
+ 
+> lua_code_cache is off; this will hurt performance in ./directives/conf/nginx.conf
+
+Disregard the message for now. But keep in mind to turn on the code cache 
+in production.
+
+Then `curl http://localhost:8080/`
 
 you should see
 
@@ -87,8 +94,21 @@ and on `curl http://localhost:808/` you should see the response
 
 This makes our workflow of developing  ngx_lua applications much smoother.
 
-**Note** as you might have already guessed lua_code_cache works only for
-`content_by_lua_file`  directive. It will have no effect upon `content_by_lua` directive.
+**Note** as you might have already guessed `lua_code_cache` works only for
+`*by_lua_file`  directives. It will have no effect upon `by_lua*` directives.
+
+nginx block level rules apply to the `lua_code_cache` directive. Which
+means if you set `lua_code_cache` off in a top level directive all the other
+lower lever directives will pick up on this configuration. Simillary you can achieve
+isolation for particular directives by turning the caching off only
+for those directives. 
+
+
+Also  any changes you make to the nginx.conf file itself 
+won't be detected automatically by nginx. And you will have to 
+reload the server manually. This automatic reload works only for lua files.
+
+
 
 
 #### init_by_lua 
@@ -99,10 +119,10 @@ This is most useful when you want to register
 lua global variables or start lua modules during 
 the nginx server start up. 
 
-Before we take a look at the example of init_by_lua a friendly warning.
+Before we take a look at the example of `init_by_lua` a friendly warning.
 
 Refrain from using lua global variables. For most variables you should use a `local` 
-keyword to make lua variables local to it's scope. And remember any variable declared
+keyword to declare lua variables local to it's scope. And remember any variable declared
 without a `local` keyword is global in lua.
 
 
@@ -115,9 +135,9 @@ dog = "woof" -- avoid this form except for when it makes sense
 When does it make sense to use global varialbes?
 
 Suppose you want to use a module that parses JSON which will be used  
-in many handlers, or a database client that will be used in many handlers
-or any other module that will be used across many handlers then it makes sense
-to declare the variable global and even then init_by_lua should be the only place
+in many handlers, or a database client that will be used in many handlers 
+or any other module that will be used across many handlers then it makes sense 
+to declare the variable global and even then init_by_lua should be the only place 
 where you do it.
 
 
