@@ -1,0 +1,5 @@
+{    "dependencies":{
+    "buildify":"0.4.0",
+    "markdown":"*"
+}
+}
