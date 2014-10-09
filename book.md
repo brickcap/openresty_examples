@@ -824,6 +824,8 @@ ngx.req.set_uri_args({ a = 3, b = {5, 6} })
 
 ngx lua allows setting the uri paramters as query strings and as lua tables.
 
-### res
+### The Response
 
-
+Just like the req the ngx api allows you to modify the response that goes back to client. But
+if you have read the `ngx.location.capture` section you should already be familliar with many
+of the functions that `ngx.res` provides. Nevertheless we will take a better look here: -
