@@ -740,10 +740,27 @@ then:-
 `ngx.req.get_headers()` gives you back a table of headers which you can then query as usual. For example
 
 ```
-local cookie = ngx.req.get_headers()["Cookie"]
+local headers = ngx.req.get_headers()
 
-local etag = ngx.req.get_headers()["Etag"]
+local cookie = headers["Cookie"]
+
+local etag = headers["Etag"]
+
+local host = headers["Host"]
 
 ```
+
+Simillarly it's conter-part `ngx.req.set_header` is used to set a req header for outgoing requests
+
+```
+local host = ngx.req.set_header("www.google.com")
+
+```
+
+### what about the body and post arguments?
+
+ngx provides `ngx.req.read_body()` to read all of the body data. Once the body has been read a convinence method 
+is provided in `ngx.req.get_body_data` and `ngx.req.get_post_args` which return a string/lua table. 
+ 
 
 ### res
