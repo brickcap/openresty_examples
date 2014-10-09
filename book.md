@@ -665,5 +665,26 @@ in the official docs.
 
 ### ngx.location.capture.multi
 
-Oh yes :) Take the `ngx.location.capture` and level it up by giving it lua's superpowers.
-One of the unique thigs about lua is that a function can return multiple results.
+context: rewrite_by_lua*, access_by_lua*, content_by_lua* 
+
+Oh yes :) Take the `ngx.location.capture` and level it up by lua's superpowers.
+One of the unique thigs about lua is that a function can have multiple return values. If this is your
+first time wokrig with lua then it might be a bit hard to to figure out when to use this feature. But
+luckily ngx lua makes the application of this unique concept quite obvious. Check this out:-
+
+```
+local home,about,contact = ngx.location.capture.multi{{"/home"},{"/about"},{"/contact"}}
+
+```
+The above snipped of code is just like `ngx.location.capture` that we talked about before. The
+only difference here is that instead of making a subrequest to a single uri you can make
+subrequests to multiple uris with a single line of code. Two important things to note here is that
+
+1) These multiple subrequests run in parallel.
+2) The results are returned when all the subrequests are completed.
+
+So if you were thinking about piping the result of one subrequest into another then you are out of luck.
+But multi req are still pretty cool. How?
+
+Consider this scenario:- In this day and age it is quite common to have multiple 
+
