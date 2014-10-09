@@ -544,3 +544,70 @@ ngx.DEBUG
 
 #### ngx.location.capture
 
+Context: rewrite_by_lua, access_by_lua, content_by_lua
+
+`ngx.location.capture` is one of the most powerful methods in the lua ngx api. It allows you
+to make subrequests to a uri(location).
+
+What makes it so powerful you ask?
+
+Remember the nginx `location` directive?
+
+What `location` does is: It defines endpoints for clients to make requests to. For instance
+a `location /hello` tells the client that if you make a request to `/hello` I will give you
+back the results of code excuted inside the `location` directive. And important point
+to note here is that any request made by the client to this `location` endpoint is
+an `http/tcp` request. 
+
+What `ngx.location.capture` does is that it issues an interal non blocking, syncrhonous request
+to a `locaiton`. Unlike the clients request which has to be http the location capture requests involve
+no http overhead. It is just a fast and light internal `c` level call while mimicking
+the familliar http interface. Time for an example
+
+
+```
+
+
+```
+
+See how simple it is. Issue a request to the `uri` already defined somewhere in a
+`location` directive and capture it's response.
+
+Now one area where many people are confused (I admit I was too when I was
+first learnt about it) is that the uri **must be internal**. If you try to do
+
+```
+local res = ngx.location.capture("http://www.google.com/")
+
+```
+it won't work. Because the uri is external. However if you do
+
+```
+local res = ngx.location.capture("/google_proxy")
+
+```
+where `/google_proxy is in the conf as`
+
+```
+location /google_proxy{
+proxy_pass http://www.google.com/;
+}
+
+```
+
+then the request will work. It is important to understand that `ngx.location.capture` works
+only on internal requests (or on locations that are defined in the configuration files)
+but that location can make an external http request.
+
+So now back to the topic. The `res` returned by `ngx.location.capture` contians ..
+well the response of the subrequest. Let us examine it.
+
+1. res.status:- the status code of the completed request.
+2. res.headers-: the headers returned by the response.
+3. res.body:- the body in the response which may be ...
+4. res.truncated-: boolean that incaded if the body is truncated or not.
+
+res.status, res.body and res.truncated are pretty straightforwad. res.headers require more examination.
+
+
+
