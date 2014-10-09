@@ -603,11 +603,41 @@ So now back to the topic. The `res` returned by `ngx.location.capture` contians 
 well the response of the subrequest. Let us examine it.
 
 1. res.status:- the status code of the completed request.
-2. res.headers-: the headers returned by the response.
+2. res.header-: the headers returned by the response.
 3. res.body:- the body in the response which may be ...
 4. res.truncated-: boolean that incaded if the body is truncated or not.
 
-res.status, res.body and res.truncated are pretty straightforwad. res.headers require more examination.
+res.status, res.body and res.truncated are pretty straightforwad. res.header require more examination.
 
+The response headers are simply a lua table. Here is what it might look like
 
+```
+{
+Content_Length=10200,
+Vary="Accept",
+Content_Type="text/html",
+Etag='"E0KG1DRLA505ILRLPEJOPM679"'
+}
 
+```
+So you access the header the same way in which you access a key from any lua table. For instance to access
+the vary header we do `res.header["Vary"]`.
+
+Thus far we have seen how to make only simple requests
+the internal uri using the `ngx.location.capture` but the api
+is far more flexible. You can pass query strings directly in
+the url or by uisng the args option. For instance:-
+
+````
+local res= ngx.location.capture("/hello?a=1&b=2")
+
+```
+
+and
+
+```
+local res = ngx.location.caputre("/hello",{args={a=1,b=2}}) 
+
+```
+
+are equivalent. In both the cases a subrequest will be made to `/hello?a=1&b=2`
