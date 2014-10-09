@@ -613,9 +613,7 @@ The response headers are simply a lua table. Here is what it might look like
 
 ```
 {
-Content_Length=10200,
 Vary="Accept",
-Content_Type="text/html",
 Etag='"E0KG1DRLA505ILRLPEJOPM679"'
 }
 
@@ -641,3 +639,31 @@ local res = ngx.location.caputre("/hello",{args={a=1,b=2}})
 ```
 
 are equivalent. In both the cases a subrequest will be made to `/hello?a=1&b=2`
+
+
+Infact the opitonal table can hold a lot more keys than just an `args`.
+
+```
+   local account_page = ngx.location.capture("/get_account",
+					     {method=ngx.HTTP_POST,body=
+					     json_body,args={user_name=name}
+					     })
+
+
+```
+
+The above sample illustrates the point. Here the `ngx.location.capture` passes in
+
+1. method: You can use the ngx constants that we discussed earlier
+2. body: the body to send to the subrequest. Here it is json encoded.
+3. args: the query strings that we just discussed.
+
+While method,body and args are th ones that you will find yourself using more frequently just for the
+sake of completeness a complete list of all the optional keys that can be passed to the table can be found
+in the official docs.
+
+
+### ngx.location.capture.multi
+
+Oh yes :) Take the `ngx.location.capture` and level it up by giving it lua's superpowers.
+One of the unique thigs about lua is that a function can return multiple results.
