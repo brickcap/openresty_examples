@@ -735,7 +735,7 @@ that you can read the http headers and the body check the method of the req and 
 Quite naturally the req table forms a very important part of ngx api. Let us take a deeper look at it 
 then:-
 
-**The headers**
+**The headers of the request**
 
 `ngx.req.get_headers()` gives you back a table of headers which you can then query as usual. For example
 
@@ -757,10 +757,73 @@ local host = ngx.req.set_header("www.google.com")
 
 ```
 
-### what about the body and post arguments?
+If for some reason you want the actual headers sent by the client instead of the ones that have been parsed
+into a table you can use `ngx.req.raw_header`
+
+To clear a header you can use `ngx.req.clear_header`. Can be very useful when making
+a proxy req from the client to the server.
+
+
+**The body of the request**
 
 ngx provides `ngx.req.read_body()` to read all of the body data. Once the body has been read a convinence method 
-is provided in `ngx.req.get_body_data` and `ngx.req.get_post_args` which return a string/lua table. 
- 
+is provided in `ngx.req.get_body_data` and `ngx.req.get_post_args` which return a string/lua table.
+
+```
+ngx.req.read_body()
+
+local args = ngx.req.get_post_args()
+
+-- just like the headers args is a lua table. 
+
+```
+
+**The method of the request**
+
+`ngx.req.get_method ` is used to get the method of an incoming request. `ngx.req.set_method` is used to set
+the method for an outgoing request. 
+
+```
+local method = ngx.req.get_method
+
+ngx.req.set_method(ngx.HTTP_POST)
+
+```
+
+**The uri of the request**
+
+ngx lua also allows to to change the uri to which the req is initiated by the client.
+
+```
+ngx.req.set_uri("/foo")
+
+```
+
+Additionally the set_uri takes in a optional boolean
+parameter that tells nginx to keep searching for newly set uri location
+
+```
+ngx.req.set_uri("/foo",true)
+
+```
+The context of execution  becomes important in this case since it mimicks the behaviour of nginx rewrite directive.
+The only allowed location where the optional bool parameter can be used as true is the rewrite_by_lua/rewrite_by_lua_file
+
+**The url arguments**
+
+You can also modify the query string parameters of the req. Here's how:
+
+```
+ngx.req.set_uri_args("a=3&b=hello%20world")
+
+ngx.req.set_uri_args({ a = 3, b = {5, 6} })
+
+-- this will be translated as "a=3&b=5&b=6"
+
+```
+
+ngx lua allows setting the uri paramters as query strings and as lua tables.
 
 ### res
+
+
