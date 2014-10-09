@@ -684,7 +684,66 @@ subrequests to multiple uris with a single line of code. Two important things to
 2) The results are returned when all the subrequests are completed.
 
 So if you were thinking about piping the result of one subrequest into another then you are out of luck.
-But multi req are still pretty cool. How?
+But multi req are still pretty cool. Why?
 
-Consider this scenario:- In this day and age it is quite common to have multiple 
+Consider this scenario:- It would not be an exxageration to say that all applications today use
+some third party apis to as supports for thier main application. Say you have an application where you
+aggregate the results of interesting conversations across the internt. You pull in data from various sources like
+twitter, facebook and linkedin. In this scenario you have to make atleast three seperate http requests to aggregate
+the data. 
 
+So what do you do? Just this:-
+
+```
+local statuses,tweets,posts = ngx.location.capture.multi{{"/facebook_graph"},{"/tweets"},{"/lnkedin"}}
+
+```
+
+and it all simply works. Now the application is not limited to external third party data aggregation.
+It is quite probable that internally you use many applications that work on secondary tasks and maybe you
+want to generate a report  by querying them for updates. All you got to do is issue an `ngx.location.capture.multi` and
+you are set.
+
+**Can one use an options table like in the nginx.location.capture?**
+
+Of course you can. Here is how:-
+
+
+```
+local res1,res2 = ngx.location.capture.multi{
+	{"/req1",{method=ngx.HTTP_POST}},
+	{"req2",{args={a=1,b=2}}}
+}
+
+```
+
+Every request in multi is contained within it's own table which can perform all of things that
+we saw in a simple `ngx.location.capture`. Cool isn't it?
+
+
+
+
+### req
+
+ngx api exposes a req object that allows us to configure explicitly our req parameters before sending it to
+the server. This means that you can easily add/remove http headers and body, configure the method of the
+req.
+
+On the other hand the ngx api also provides ability to read an incoming req from the client. Which means
+that you can read the http headers and the body check the method of the req and then send the response back.
+
+Quite naturally the req table forms a very important part of ngx api. Let us take a deeper look at it 
+then:-
+
+**The headers**
+
+`ngx.req.get_headers()` gives you back a table of headers which you can then query as usual. For example
+
+```
+local cookie = ngx.req.get_headers()["Cookie"]
+
+local etag = ngx.req.get_headers()["Etag"]
+
+```
+
+### res
