@@ -778,6 +778,8 @@ local args = ngx.req.get_post_args()
 
 ```
 
+To set the body data you can use `ngx.set_body_data`
+
 **The method of the request**
 
 `ngx.req.get_method ` is used to get the method of an incoming request. `ngx.req.set_method` is used to set
@@ -828,4 +830,38 @@ ngx lua allows setting the uri paramters as query strings and as lua tables.
 
 Just like the req the ngx api allows you to modify the response that goes back to client. But
 if you have read the `ngx.location.capture` section you should already be familliar with many
-of the functions that `ngx.res` provides. Nevertheless we will take a better look here: -
+of the functions that of a response. Nevertheless we will take a better look here: -
+
+
+**The headers of the response**
+
+ngx api gives us to ways to deal with the headers that will be sent out in the response. The
+`ngx.header` lua table contains a list of headers that will be sent out as the response to the current req.
+Using `ngx.header` you can update an existing header or add new headers. You read from `ngx.header` in 
+exactly the same way  as you would read from any other lua table.
+
+```
+local content_type = ngx.header.content_type -- reads "Content-Type header"
+
+-- any '-' in a header is replaced by a '_'. You can still read the header in the orignal form like so
+
+local content_type_orig = ngx.header["Content-type"]
+
+ngx.header.content_type = "application/json" -- sets the content type header
+
+```
+
+In case the 
+
+Besides ngx.header there is `ngx.resp.get_headers()` which is quite simillar to `ngx.req.get_headers()`.
+It simply returns a list of response headers that will be sent to the client. The value returned is a lua
+table.
+
+```
+local resp_headers = ngx.resp.get_headers()
+
+``
+
+
+
+
