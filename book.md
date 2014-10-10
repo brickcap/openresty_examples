@@ -836,7 +836,7 @@ of the functions that of a response. Nevertheless we will take a better look her
 **The headers of the response**
 
 ngx api gives us to ways to deal with the headers that will be sent out in the response. The
-`ngx.header` lua table contains a list of headers that will be sent out as the response to the current req.
+`ngx.header` contains a list of headers that will be sent out as the response to the current req.
 Using `ngx.header` you can update an existing header or add new headers. You read from `ngx.header` in 
 exactly the same way  as you would read from any other lua table.
 
@@ -851,17 +851,71 @@ ngx.header.content_type = "application/json" -- sets the content type header
 
 ```
 
-In case the 
+In case you want to set multiple values to a header you just have to pass a list of values:-
 
-Besides ngx.header there is `ngx.resp.get_headers()` which is quite simillar to `ngx.req.get_headers()`.
+```
+ngx.header["My-Multi-Value-Header"] = {"1","2"}
+
+```
+
+Simillarly if you read a multivalued header a list will be returned as a response.
+
+```
+local multi_val_read  = ngx.header["My-Multi-Value-Header"]
+
+-- multi_val_read = {"1","2"}
+
+```
+
+One important thing
+to note here is that if you try to set multiple values to a header that can only contain a single value
+the last item from the list will be chosen.
+
+`ngx.header.content_type = {'a', 'b'}` would result in
+
+`ngx.header.content_type = 'b'`
+
+The ngx.header does not return an iteratable lua table. For that purpose use:-
+
+`ngx.resp.get_headers()` which is quite simillar to `ngx.req.get_headers()`.
 It simply returns a list of response headers that will be sent to the client. The value returned is a lua
-table.
+table which can be iterated upon.
 
 ```
 local resp_headers = ngx.resp.get_headers()
 
 ``
 
+Finally if you use the response from  `ngx.location.capture` the headers are found in `res.header`. The result
+returned is a proper lua header and can be iterated upon. 
 
+**The body of the response**
 
+The body of the response can only be accessed from the response that you get by issuing a request/subrequeest.
+Unlike response headers there is no way to access the response headers that are going to be sent without
+having access to the response object first.
+
+```
+local res = ngx.location.capture("/res_path")
+local body = res.body -- read the data
+res.body = "Some arbitrary body data" -- set the data to an aribrary value
+res.body = cjson.encode({a=1,b=2}) -- sending json with the body
+
+```
+
+The above snippet shows how you can set the body data of the response. The important thing to note here is that
+every time you set the data to a new value the  previous data is over written. So the first res.body statement will
+over write the orignial body returned from the response where as the second res.body statement will over write the
+first statement. 
+
+**The status of the response**
+
+The response status can be read and updated using the `ngx.status`
+
+```
+local status = ngx.status -- read the status of the response being sent
+
+ngx.status = ngx.HTTP_NOT_MODIFIED -- set the status code to 304. Using ngx constant here, but you may supply numerical values	
+
+```
 
