@@ -884,7 +884,7 @@ table which can be iterated upon.
 ```
 local resp_headers = ngx.resp.get_headers()
 
-``
+```
 
 Finally if you use the response from  `ngx.location.capture` the headers are found in `res.header`. The result
 returned is a proper lua header and can be iterated upon. 
@@ -896,6 +896,7 @@ Unlike response headers there is no way to access the response headers that are 
 having access to the response object first.
 
 ```
+
 local res = ngx.location.capture("/res_path")
 local body = res.body -- read the data
 res.body = "Some arbitrary body data" -- set the data to an aribrary value
