@@ -4,9 +4,9 @@ Before we answer the why let us first deal with the what.
 
 "**What is openresty?**"
 
-Openrety is a packaging of nginx together with various useful libraries that can be used
+Openresty is a packaging of nginx together with various useful libraries that can be used
 to *write* application servers. Notice the  emphasis on write. Now you will not be limited to just
-configre your server but you can program it. At it's core it's still the nginx that you know. All your configuration
+configuring your server but you can program it. At it's core it's still the nginx that you know. All your configuration
 files that work with vanilla nginx will work with openresty. When you install openresty you loose
 nothing. But you gain:-
 
@@ -14,32 +14,69 @@ nothing. But you gain:-
 2. Do things that were impossible or not straightforward with nginx configuration files before.
 
 With that out of the way.. why would you want to learn about open resty? Or
-are there not enough we frameworks already? Do you need to learn yet another one.
+are there not enough web frameworks already? Do you need to learn yet another one?
+
+Fair questions. Nginx does web applications really really well. It is light, it is fast and it is
+very well documented. People have often reported that just by  configuring nginx
+to serve their applications they have gained performance boost. That nginx makes your applications fast is a
+well accepted fact. What openresty does is that it takes all the goodness of nginx : it's fast response time and
+it's low memory usage and removes the barriers to developing applications with it.
+
+"**And what are these barriers?**"
+
+The configuration files themselves. While they are quite flexible all they do is they limit the power of nginx to the set
+that is configurable. Sure you can do a lot but not anything beyond what is allowed. Here is a simple example for instance
+
+Suppose before forwarding the data `POSTed` to your application you want to do certain checks on it so that you can be sure that your application get's only the clean refined data to operate upon. Is there any easy way to validate the data posted to nginx before it is forwarded to your application server? If there is I could not find it. But in open resty this is as simple as
+
+```
+content_by_lua '
+
+-- read the request of the body
+ngx.req.read_body()
+
+-- give back the body as an easily query-able table data structure
+local post_args = ngx.req.get_post_args() 
+
+-- validate the data 
+local clean_body_data = require("lib/validate").validate_body(post_args)
+
+'
+
+```
+
+This has the effect of simplifying your architecture by guaranteeing that any data that is posted by the proxy is valid. So your application layer can focus on operating upon it without worrying about cleansing it first. Once you learn open resty you will be able to identify many such functions that can be better delegated to a proxy. It will simplify your application and use nginx and all it's low resource, fast performance goodness to the fullest. Win win.
+
+"**But my application is working. I don't want to change any thing**"
+
+I am not asking you to change. Remember that openresty is still nginx. Everything that was working will continue to
+work. Openresty just gives you an opprotunity to make use of nginx in ways that you might not have considerd before. You have nothing to loose and much to gain. 
 
 **What do you need to start learning open resty?**
 
 You need to know lua. BUT BEFORE YOU CLOSE THIS TAB know that you don't need to have a mastery of
 the language to start developing openresty applications. All you need is [15 minutes worth of lua](http://tylerneylon.com/a/learn-lua/) and you are all set to go. More specifically you need to have a solid understanding of lua tables,
 lua modules, how to write loops and conditional statements and the variable scope in lua. If you have
-programmed before you can learn all this before you finish you daily morning cup of cofee :)
+programmed before you can learn all of this before you finish your first cup of coffee :)
 
 **But wait I don't know any nginx**
 
 Not a problem. Nginx applications are written in what are known as configuration files. You can get
-most of it by just reading it but if you encounter any problem the nginx has a very detailed documentation
-and you should be able to google your way out of any trouble. The enitre guide is written with the assumption
-that
+most of it by just reading but if you encounter any problem the [nginx has a very detailed documentation](http://nginx.org/) and tonnes of community support so you should be able to google your way out of any trouble.
+The entire guide is written with the assumption that
 
 1. You have no knowledge of nginx
-2. You can work with the command line: copy pase the code, run programs etc
+2. You can work with the command line: copy paste the code, run programs etc
 3. Read the manual in case you need more detailed information.
 
 All you need therefore to follow this guide is willingness to learn. 
 
 <h1 id="hello_world">Hello world</h1>
 
-Openresty is just an enhancement of nginx. 
-If you are familiar with nginx you will feel right at home with openresty. 
+In case you skipped the introduction and jumped to the hello world then first of all good for you! and second a summary of what I said above:-
+
+>Openresty is just an enhancement of nginx. So all you knowledge carries over.
+
 This is a hello_world example to illustrate how to write openresty scripts. 
 The first thing to understand here is the file structure. Here is a high level overview 
 

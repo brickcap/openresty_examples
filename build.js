@@ -24,7 +24,7 @@ buildify.task({
 	var html = marked(book.toString());
 	var rendered = mustache.render(book_template.toString(),{html:html});
 	fs.writeFileSync(build_path+"index.html",rendered);
-	console.log("Book has been built definitely");
+	console.log("Book has been built..... definitely");
     }
 
 });
