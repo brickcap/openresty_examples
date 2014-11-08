@@ -753,7 +753,7 @@ local host = headers["Host"]
 Simillarly it's conter-part `ngx.req.set_header` is used to set a req header for outgoing requests
 
 ```
-local host = ngx.req.set_header("www.google.com")
+ngx.req.set_header("Content-type","application/json")
 
 ```
 
