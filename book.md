@@ -1,3 +1,40 @@
+<h1 id="why_openresty">Why openresty?</h1>
+
+Before we answer the why let us first deal with the what.
+
+"**What is openresty?**"
+
+Openrety is a packaging of nginx together with various useful libraries that can be used
+to *write* application servers. Notice the  emphasis on write. Now you will not be limited to just
+configre your server but you can program it. At it's core it's still the nginx that you know. All your configuration
+files that work with vanilla nginx will work with openresty. When you install openresty you loose
+nothing. But you gain:-
+
+1. An ability to script nginx with an easy to use language, lua.
+2. Do things that were impossible or not straightforward with nginx configuration files before.
+
+With that out of the way.. why would you want to learn about open resty? Or
+are there not enough we frameworks already? Do you need to learn yet another one.
+
+**What do you need to start learning open resty?**
+
+You need to know lua. BUT BEFORE YOU CLOSE THIS TAB know that you don't need to have a mastery of
+the language to start developing openresty applications. All you need is [15 minutes worth of lua](http://tylerneylon.com/a/learn-lua/) and you are all set to go. More specifically you need to have a solid understanding of lua tables,
+lua modules, how to write loops and conditional statements and the variable scope in lua. If you have
+programmed before you can learn all this before you finish you daily morning cup of cofee :)
+
+**But wait I don't know any nginx**
+
+Not a problem. Nginx applications are written in what are known as configuration files. You can get
+most of it by just reading it but if you encounter any problem the nginx has a very detailed documentation
+and you should be able to google your way out of any trouble. The enitre guide is written with the assumption
+that
+
+1. You have no knowledge of nginx
+2. You can work with the command line: copy pase the code, run programs etc
+3. Read the manual in case you need more detailed information.
+
+All you need therefore to follow this guide is willingness to learn. 
 
 <h1 id="hello_world">Hello world</h1>
 
