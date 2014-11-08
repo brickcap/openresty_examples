@@ -1,4 +1,4 @@
-<h1>Contents</h1>
+<h1 id="contents">Contents</h1>
 
 1. [Why openresty](#why_openresty)
 2. [Our first openresty script](#hello_world)
@@ -6,6 +6,8 @@
 4. [The ngx api](#the_ngx_api)
 
 <h1 id="why_openresty">Why openresty?</h1>
+
+<small><a href="#contents">Back to the contents</a></small>
 
 Before we answer the why let us first deal with the what.
 
@@ -80,6 +82,8 @@ All you need therefore to follow this guide is willingness to learn.
 
 <h1 id="hello_world">Hello world</h1>
 
+<small><a href="#contents">Back to the contents</a></small>
+
 In case you skipped the introduction and jumped to the hello world then first of all good for you! and second a summary of what I said above:-
 
 >Openresty is just an enhancement of nginx. So all you knowledge carries over.
@@ -130,7 +134,11 @@ for now as we can get far with just that. What `ngx.say()` does is
 that it sends the concatenated arguments to the client as an http response. 
 But enough talk for now. Let us run this example:- 
 
-``` nginx -p `pwd` -c conf/nginx.conf ```
+```
+nginx -p `pwd` -c conf/nginx.conf
+
+```
+Here pwd is the path with directory of your configuration file
 
 and then 
 
@@ -196,6 +204,8 @@ now `curl http://localhost:8080/by_file` should return
 -----
 
 <h1 id="directives">Directives</h1>
+
+<small><a href="#contents">Back to the contents</a></small>
 
 Nginx comes with it's own mini programming language in which directives form the basic constructs. 
 These directives are either block level or simple. Simple directives are 
@@ -490,6 +500,8 @@ For now we move on to the meatier stuff. The ngx_lua API.
 
 
 <h1 id="the_ngx_api">The ngx api</h1>
+
+<small><a href="#contents">Back to the contents</a></small>
 
 Ah the nginx API. This is where the magic happens. 
 Remember all those `by_lua` directives that we talk about in the last chapter? 
