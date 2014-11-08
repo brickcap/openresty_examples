@@ -1,3 +1,10 @@
+<h1>Contents</h1>
+
+1. [Why openresty](#why_openresty)
+2. [Our first openresty script](#hello_world)
+3. [The directives](#directives)
+4. [The ngx api](#the_ngx_api)
+
 <h1 id="why_openresty">Why openresty?</h1>
 
 Before we answer the why let us first deal with the what.
