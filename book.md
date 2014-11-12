@@ -22,8 +22,8 @@ nothing. But you gain:-
 1. An ability to script nginx with an easy to use language, lua.
 2. Do things that were impossible or not straightforward with nginx configuration files before.
 
-With that out of the way.. why would you want to learn about open resty? Or
-are there not enough web frameworks already? Do you need to learn yet another one?
+With that out of the way.. why would you want to learn about open resty at all? Aren't there
+enough web frameworks already? Do you need to learn yet another one?
 
 Fair questions. Nginx does web applications really really well. It is light, it is fast and it is
 very well documented. People have often reported that just by  configuring nginx
