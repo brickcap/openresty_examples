@@ -655,7 +655,7 @@ an `http/tcp` request.
 What `ngx.location.capture` does is that it issues an interal non blocking, syncrhonous request
 to a `locaiton`. Unlike the clients request which has to be http the location capture requests involve
 no http overhead. It is just a fast and light internal `c` level call while mimicking
-the familliar http interface. Time for an example
+the familliar http interface. Time for an example:-
 
 
 ```
@@ -813,8 +813,65 @@ local res1,res2 = ngx.location.capture.multi{
 Every request in multi is contained within it's own table which can perform all of things that
 we saw in a simple `ngx.location.capture`. Cool isn't it?
 
+#### location capture FAQS
+
+**Q**:Is location.caputure/capture_multi synchronous?
+**A**: Yes. location capture is synchronous but non blocking. Synchronous but non blocking? Well yes.
+You see the location capture provides a lua interface over what are known as [subrequests](http://openresty.org/download/agentzh-nginx-tutorials-en.html#nginx-variables-a-detour-to-subrequests) in nginx world. Quoting from the article linked above:-
+
+>Subrequests may look very much like an HTTP request in appearance, their implementation, however, has nothing to do with neither the HTTP protocol nor any kind of socket communication. A subrequest is an abstract invocation for decomposing the task of the main request into smaller "internal requests" that can be served independently by multiple different location blocks, either in series or in parallel.
+
+>when the Nginx core processes a subrequest, it just calls a few C functions behind the scene, without doing any kind of network or UNIX domain socket communication. For this reason, subrequests are extremely efficient.
+
+A single location capture like
+
+```
+local res = ngx.location.capture("url")
+
+```
 
 
+intiates a subrequest at nginx's level and it's equivalent to:-
+
+
+```
+location /main {
+    echo_location /url;   
+}
+
+location /url{
+echo hello_url;
+}
+
+
+```
+Where as location.capture_multi sends out a series of parallel subrequests to location blocks. For example
+
+```
+local res1,res2 = ngx.location.capture_multi{{"/url1"},{"url2"}}
+
+```
+
+The above lua code initates multiple paralell subrequests to locations `url1`  and `url2`. The results are returned after all the requests have been completed. The equivalent nginx code would be
+
+```
+location /main{
+echo_location /url1;
+echo_location /url2;
+}
+
+
+location /url1{
+echo hello_url1;
+}
+
+
+location /url2{
+echo hello_url2;
+}
+
+```
+So by synchronous yet non blocking we mean that location capture waits for the requests to complete. But the requests themselves are executed independantly in their won location blocks.
 
 ### req
 
