@@ -871,7 +871,10 @@ echo hello_url2;
 }
 
 ```
-So by synchronous yet non blocking we mean that location capture waits for the requests to complete. But the requests themselves are executed independantly in their won location blocks.
+So by synchronous yet non blocking we mean that location capture waits for the requests to be completed before returning the results. But the requests themselves are executed independantly in their own location blocks.
+
+**Q**: Can I make external http requests with location capture?
+**A**: You sure can! yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But they are executed independantly. This means that even though the caller is not dealing with http the location block themselves can make any kind of request that they want. 
 
 ### req
 
