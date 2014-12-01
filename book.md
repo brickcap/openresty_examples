@@ -896,13 +896,33 @@ echo hello_url2;
 }
 
 ```
-So by synchronous yet non blocking we mean that location capture waits for the requests to be completed before returning the results. But the requests themselves are executed independantly in their own location blocks. Of course these are just simplistic translations and as we have already seen location capture can go beyond making simple "GET" requests to location blocks.
+So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrenly. Yet the location.capture does not return untill all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
+
+The location.capture() can also be interpreted as location.capture_multi{} with a single subrequest.
+
+Of course these were just simplistic translations and as we have already seen location capture can go beyond making simple "GET" requests to location blocks. But hopefully the working of location.capture/capture_multi is a bit more clearer.
 
 ----
 
 **Q**: Can I make external http requests with location capture?
 
-**A**: You sure can! yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But they are executed independantly. This means that even though the caller is not dealing with http the location block themselves can make any kind of request that they want. 
+**A**: You sure can! yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But the subrequests are executed independantly. This means that even though the subrequest is not dealing with http the location block themselves can make any kind of request that they want. Like we saw in the examples above this is perfectly valid:-
+
+```
+
+location /google{
+resolver 8.8.8.8;
+proxy_pass http://www.google.com/;
+}
+
+````
+
+```
+local res = ngx.location.capture("/google")
+
+-- the res.body should contain the html page of google.com
+
+```
 
 ------
 
