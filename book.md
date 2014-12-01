@@ -24,14 +24,14 @@ files that work with vanilla nginx will work with openresty. When you install op
 nothing. But you gain:-
 
 1. An ability to script nginx with an easy to use language, lua.
-2. Do things that were impossible or not straightforward with nginx configuration files before.
+2. Do things that were impossible or difficult with nginx configuration files before.
 
 With that out of the way.. why would you want to learn about open resty at all? Aren't there
 enough web frameworks already? Do you need to learn yet another one?
 
 Fair questions. Nginx does web applications really really well. It is light, it is fast and it is
 very well documented. People have often reported that just by  configuring nginx
-to serve their applications they have gained performance boost. That nginx makes your applications fast is a
+to serve their applications they have gained a boost in performance. That nginx makes your applications fast is a
 well accepted fact. What openresty does is that it takes all the goodness of nginx : it's fast response time and
 it's low memory usage and removes the barriers to developing applications with it.
 
@@ -58,7 +58,7 @@ local clean_body_data = require("lib/validate").validate_body(post_args)
 
 ```
 
-This has the effect of simplifying your architecture by guaranteeing that any data that is posted by the proxy is valid. So your application layer can focus on operating upon it without worrying about cleansing it first. Once you learn open resty you will be able to identify many such functions that can be better delegated to a proxy. It will simplify your application and use nginx and all it's low resource, fast performance goodness to the fullest. Win win.
+This has the effect of simplifying your architecture by guaranteeing that any data that is posted to the proxy is valid. So your application layer can focus on operating upon it without worrying about cleansing it first. Once you learn open resty you will be able to identify many such functions that can be better delegated to a proxy. It will simplify your application and use nginx and all it's low resource, fast performance goodness to the fullest. Win win.
 
 "**But my application is working. I don't want to change any thing**"
 
@@ -92,10 +92,11 @@ All you need therefore to follow this guide is willingness to learn.
 
 In case you skipped the introduction and jumped to the hello world then first of all good for you! and second a summary of what I said above:-
 
->Openresty is just an enhancement of nginx. So all you knowledge carries over.
+>Openresty is just an enhancement of nginx. So all your previous knowledge of nginx carries over.
 
 This is a hello_world example to illustrate how to write openresty scripts. 
-The first thing to understand here is the file structure. Here is a high level overview 
+The first thing that we will do is we will create a file structure for our config files and scripts.
+Here is a high level overview 
 
 
 ```
@@ -156,7 +157,7 @@ you should see a response
 
 And congratulations you have written you first openresty script. 
 Now I don't know about you but wrapping code scripts 
-around string code does not look pretty to me. 
+around strings does not look pretty to me. 
 Wouldn't it be nice if we could create a sperate file for 
 lua scripts and include it in the nginx configuration files? 
 `content_by_lua_file` allows us to do just that. Let us create a seperate directory `lua`  
@@ -201,7 +202,7 @@ http {
 
 Before we curl for the `/by_file` location we must reload nginx  
 
-```nginx -p `pwd` -s reload ````
+`nginx -p  pwd -s reload `
 
 now `curl http://localhost:8080/by_file` should return
 
@@ -320,7 +321,7 @@ and on `curl http://localhost:808/` you should see the response
 This makes our workflow of developing  ngx_lua applications much smoother.
 
 **Note** as you might have already guessed `lua_code_cache` works only for
-`*by_lua_file`  directives. It will have no effect upon `by_lua*` directives.
+`*by_lua_file`  directives. It will have no effect upon `*by_lua` directives.
 
 nginx block level rules apply to the `lua_code_cache` directive. Which
 means if you set `lua_code_cache` off in a top level directive all the other
