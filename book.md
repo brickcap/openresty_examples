@@ -3,7 +3,6 @@
 1. [Why openresty](#why_openresty)
 2. [Our first openresty script](#hello_world)
 3. [The directives](#directives)
-    - [Introduction to directives](#introduction_directives)
     - [Openresty's directives](#openresty_directives)
 4. [The ngx api](#the_ngx_api)
     - [location capture faqs](#loc_cap_faq)
@@ -237,12 +236,6 @@ proxy_pass http://localhost:5984/;
 
 
 `nginx_lua` keeps the same structuring of the configuration files. 
-As we saw in the last chapter there is little difference between
-a vanilla nginx configuration and an nginx_lua configuration. In fact almost
-all of the nginx directives can be used as usual in an `nginx_lua` configuration
-file. However nginx_lua adds several new directives that enhances the configurability
-of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
-chapter. Here we will take a look at a few more intersting ones
 
 
 -----
@@ -250,6 +243,13 @@ chapter. Here we will take a look at a few more intersting ones
 <h4 id="openresty_directives">Openresty's directives</h4>
 
 <small><a href="#contents">Back to the top</a></small>
+
+As we saw in the last chapter there is little difference between
+a vanilla nginx configuration and an nginx_lua configuration. In fact almost
+all of the nginx directives can be used as usual in an `nginx_lua` configuration
+file. However nginx_lua adds several new directives that enhances the configurability
+of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
+chapter. Here we will take a look at a few more intersting ones
 
 ####lua_code_cache 
 
@@ -305,7 +305,9 @@ Then `curl http://localhost:8080/`
 
 you should see
 
-> <p> hello world </p> in response
+> <p> hello world </p>
+
+in response
 
 Now edit the hello_world.lua to
 
