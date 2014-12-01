@@ -244,7 +244,12 @@ file. However nginx_lua adds several new directives that enhances the configurab
 of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
 chapter. Here we will take a look at a few more intersting ones
 
+
 -----
+
+<h4 id="openresty_directives">Openresty's directives</h4>
+
+<small><a href="#contents">Back to the top</a></small>
 
 ####lua_code_cache 
 
@@ -921,7 +926,7 @@ proxy_pass http://www.google.com/;
 ```
 local res = ngx.location.capture("/google")
 
--- the res.body should contain the html page of google.com
+-- the res.body should contain the html source of google.com
 
 ```
 
