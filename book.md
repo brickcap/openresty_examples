@@ -736,7 +736,7 @@ the internal uri using the `ngx.location.capture` but the api
 is far more flexible. You can pass query strings directly in
 the url or by uisng the args option. For instance:-
 
-````
+```
 local res= ngx.location.capture("/hello?a=1&b=2")
 
 ```
@@ -896,6 +896,7 @@ echo hello_url2;
 }
 
 ```
+
 So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrenly. Yet the location.capture does not return untill all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
 
 The location.capture() can also be interpreted as location.capture_multi{} with a single subrequest.
@@ -906,7 +907,7 @@ Of course these were just simplistic translations and as we have already seen lo
 
 **Q**: Can I make external http requests with location capture?
 
-**A**: You sure can! yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But the subrequests are executed independantly. This means that even though the subrequest is not dealing with http the location block themselves can make any kind of request that they want. Like we saw in the examples above this is perfectly valid:-
+**A**: You sure can! Yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But the subrequests are executed independantly. This means that even though the subrequest is not dealing with http the location block themselves can make any kind of request that they want. Like we saw in the examples above the following will absolutely work:-
 
 ```
 
@@ -915,7 +916,7 @@ resolver 8.8.8.8;
 proxy_pass http://www.google.com/;
 }
 
-````
+```
 
 ```
 local res = ngx.location.capture("/google")
