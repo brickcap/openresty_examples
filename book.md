@@ -3,7 +3,12 @@
 1. [Why openresty](#why_openresty)
 2. [Our first openresty script](#hello_world)
 3. [The directives](#directives)
+    - [Introduction to directives](#introduction_directives)
+    - [Openresty's directives](#openresty_directives)
 4. [The ngx api](#the_ngx_api)
+    - [location capture faqs](#loc_cap_faq)
+
+-----
 
 <h1 id="why_openresty">Why openresty?</h1>
 
@@ -826,7 +831,9 @@ local res1,res2 = ngx.location.capture.multi{
 Every request in multi is contained within it's own table which can perform all of things that
 we saw in a simple `ngx.location.capture`. Cool isn't it?
 
-#### location capture FAQS
+<h4 id="loc_cap_faq">location capture FAQS</h4>
+
+<small><a href="#contents">Back to the top</a></small>
 
 **Q**:Is location.caputure/capture_multi synchronous?
 
