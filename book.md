@@ -5,8 +5,12 @@
 3. [The directives](#directives)
     - [Openresty's directives](#openresty_directives)
 4. [The ngx api](#the_ngx_api)
+    - [location.capture](#loc_cap)
     - [location capture faqs](#loc_cap_faq)
-
+    - [The req](#the_req)
+    - [The res](#the_res)
+    - [Sending res to the client](#sending_res) 
+   
 5. Debugging openresty scripts
 
 
