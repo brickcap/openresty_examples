@@ -7,6 +7,9 @@
 4. [The ngx api](#the_ngx_api)
     - [location capture faqs](#loc_cap_faq)
 
+5. Debugging openresty scripts
+
+
 -----
 
 <h1 id="why_openresty">Why openresty?</h1>
