@@ -78,7 +78,9 @@ The entire guide is written with the assumption that
 2. You can work with the command line: copy paste the code, run programs etc
 3. Read the manual in case you need more detailed information.
 
-All you need therefore to follow this guide is willingness to learn. 
+All you need therefore to follow this guide is willingness to learn.
+
+--------
 
 <h1 id="hello_world">Hello world</h1>
 
@@ -237,6 +239,8 @@ file. However nginx_lua adds several new directives that enhances the configurab
 of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
 chapter. Here we will take a look at a few more intersting ones
 
+-----
+
 ####lua_code_cache 
 
 This directive turns the caching of lua modules on or off. By default the  
@@ -318,7 +322,7 @@ won't be detected automatically by nginx. And you will have to
 reload the server manually. This automatic reload works only for lua files.
 
 
-
+-----
 
 #### init_by_lua 
 
@@ -372,6 +376,8 @@ lua tables in json. `cjson` was a good contender for the global
 varibale declaration because we are going to be using it in many
 location blocks. 
 
+----
+
 ####set_by_lua 
 
 `set_by_lua` directive is equivalent to nginx's 
@@ -408,6 +414,7 @@ Works with set in HttpRewriteModule,  HttpSetMiscModule, and HttpArrayVarModule.
 
 ```
 
+----
 
 #### content_by_lua
 
@@ -442,6 +449,8 @@ default content handlers like proxy_pass or directory mappers with ngx_lua's con
 
 And yeah there is a `content_by_lua_file` :)
 
+----
+
 ####rewirte_by_lua
 
 ngnx_lua equivalent of nginx's 
@@ -466,7 +475,7 @@ About `rewrite_by_lua_file` : .....
 It's same as `rewrite_by_lua` except that it 
 executes lua code from a file. 
 
-
+----
 
 ####access_by_lua
 
@@ -521,6 +530,8 @@ As you can probably infer, the reason for it was that the `ngx` package
 was already availaible to the directive globally. So there
 was no need for us to `require` it.
 
+----
+
 ####ngx.arg
 
 Context : `set_by_lua` and `body_filter_by_lua`
@@ -555,7 +566,7 @@ the args in `body_filter_by_lua` can be modified directly by the lua code.
 In fact in the example that we saw above we have modified the response body
 to a different value.
 
-
+----
 
 #### constants
 
@@ -634,12 +645,13 @@ ngx.INFO
 ngx.DEBUG
 
 ```
+----
 
 #### ngx.location.capture
 
 Context: rewrite_by_lua, access_by_lua, content_by_lua
 
-`ngx.location.capture` is one of the most powerful methods in the lua ngx api. It allows you
+`ngx.location.capture` is one of the most powerful functions in the lua ngx api. It allows you
 to make subrequests to a uri(location).
 
 What makes it so powerful you ask?
@@ -755,6 +767,7 @@ While method,body and args are th ones that you will find yourself using more fr
 sake of completeness a complete list of all the optional keys that can be passed to the table can be found
 in the official docs.
 
+----
 
 ### ngx.location.capture.multi
 
@@ -816,6 +829,7 @@ we saw in a simple `ngx.location.capture`. Cool isn't it?
 #### location capture FAQS
 
 **Q**:Is location.caputure/capture_multi synchronous?
+
 **A**: Yes. location capture is synchronous but non blocking. Synchronous but non blocking? Well yes.
 You see the location capture provides a lua interface over what are known as [subrequests](http://openresty.org/download/agentzh-nginx-tutorials-en.html#nginx-variables-a-detour-to-subrequests) in nginx world. Quoting from the article linked above:-
 
@@ -874,9 +888,12 @@ echo hello_url2;
 So by synchronous yet non blocking we mean that location capture waits for the requests to be completed before returning the results. But the requests themselves are executed independantly in their own location blocks.
 
 **Q**: Can I make external http requests with location capture?
+
 **A**: You sure can! yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But they are executed independantly. This means that even though the caller is not dealing with http the location block themselves can make any kind of request that they want. 
 
-### req
+------
+
+### The req
 
 ngx api exposes a req object that allows us to configure explicitly our req parameters before sending it to
 the server. This means that you can easily add/remove http headers and body, configure the method of the
@@ -979,7 +996,9 @@ ngx.req.set_uri_args({ a = 3, b = {5, 6} })
 
 ngx lua allows setting the uri paramters as query strings and as lua tables.
 
-### The Response
+-----
+
+### The res
 
 Just like the req the ngx api allows you to modify the response that goes back to client. But
 if you have read the `ngx.location.capture` section you should already be familliar with many
@@ -1073,3 +1092,4 @@ ngx.status = ngx.HTTP_NOT_MODIFIED -- set the status code to 304. Using ngx cons
 
 ```
 
+----
