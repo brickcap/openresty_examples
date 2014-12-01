@@ -831,6 +831,8 @@ local res1,res2 = ngx.location.capture.multi{
 Every request in multi is contained within it's own table which can perform all of things that
 we saw in a simple `ngx.location.capture`. Cool isn't it?
 
+-----
+
 <h4 id="loc_cap_faq">location capture FAQS</h4>
 
 <small><a href="#contents">Back to the top</a></small>
@@ -844,10 +846,11 @@ You see the location capture provides a lua interface over what are known as [su
 
 >when the Nginx core processes a subrequest, it just calls a few C functions behind the scene, without doing any kind of network or UNIX domain socket communication. For this reason, subrequests are extremely efficient.
 
-A single location capture like
+ALl right we will now try to translate what a trivial location capture migt look like if written using nginx configurations. For this we will be making use of the [echo module](http://wiki.nginx.org/HttpEchoModule#echo_location_async). Consider a single location capture like
 
 ```
 local res = ngx.location.capture("url")
+ngx.say(res.body)
 
 ```
 
@@ -864,12 +867,13 @@ location /url{
 echo hello_url;
 }
 
-
 ```
+
 Where as location.capture_multi sends out a series of parallel subrequests to location blocks. For example
 
 ```
 local res1,res2 = ngx.location.capture_multi{{"/url1"},{"url2"}}
+ngx.say(res1.body..res2.body)
 
 ```
 
@@ -877,8 +881,8 @@ The above lua code initates multiple paralell subrequests to locations `url1`  a
 
 ```
 location /main{
-echo_location /url1;
-echo_location /url2;
+echo_location_async /url1;
+echo_location_async /url2;
 }
 
 
@@ -892,7 +896,9 @@ echo hello_url2;
 }
 
 ```
-So by synchronous yet non blocking we mean that location capture waits for the requests to be completed before returning the results. But the requests themselves are executed independantly in their own location blocks.
+So by synchronous yet non blocking we mean that location capture waits for the requests to be completed before returning the results. But the requests themselves are executed independantly in their own location blocks. Of course these are just simplistic translations and as we have already seen location capture can go beyond making simple "GET" requests to location blocks.
+
+----
 
 **Q**: Can I make external http requests with location capture?
 
