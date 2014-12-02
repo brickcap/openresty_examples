@@ -9,7 +9,6 @@
     - [location capture faqs](#loc_cap_faq)
     - [The req](#the_req)
     - [The res](#the_res)
-    - [Sending res to the client](#sending_res) 
    
 5. Debugging openresty scripts
 
@@ -1049,25 +1048,33 @@ ngx lua allows setting the uri paramters as query strings and as lua tables.
 
 ### The res
 
-Just like the req the ngx api allows you to modify the response that goes back to client. But
-if you have read the `ngx.location.capture` section you should already be familliar with many
-of the functions that of a response. Nevertheless we will take a better look here: -
+Just like the req the ngx api allows you to modify the response that goes back to client. If
+ you have read the `ngx.location.capture` section you should already be familliar with many
+of the functions that allow you to modify the response. Nevertheless we will take a better look here: -
 
 
 **The headers of the response**
 
-ngx api gives us to ways to deal with the headers that will be sent out in the response. The
-`ngx.header` contains a list of headers that will be sent out as the response to the current req.
+The ngx api gives us two ways to deal with the headers that will be sent out in the response. First there is the
+`ngx.header` that contains a list of headers that will be sent out as the response to the current request.
 Using `ngx.header` you can update an existing header or add new headers. You read from `ngx.header` in 
 exactly the same way  as you would read from any other lua table.
 
 ```
 local content_type = ngx.header.content_type -- reads "Content-Type header"
 
--- any '-' in a header is replaced by a '_'. You can still read the header in the orignal form like so
+```
+
+Note that any '-' in a header is replaced by a '_'. You can still read the header in the orignal form like so:-
+
+```
 
 local content_type_orig = ngx.header["Content-type"]
 
+```
+You can set a value to the header in the same way you set a vlaue to key in a lua table.
+
+```
 ngx.header.content_type = "application/json" -- sets the content type header
 
 ```
@@ -1090,16 +1097,17 @@ local multi_val_read  = ngx.header["My-Multi-Value-Header"]
 
 One important thing
 to note here is that if you try to set multiple values to a header that can only contain a single value
-the last item from the list will be chosen.
+the last item from the list will be chosen. For instance take the content type header:-
 
 `ngx.header.content_type = {'a', 'b'}` would result in
 
 `ngx.header.content_type = 'b'`
 
-The ngx.header does not return an iteratable lua table. For that purpose use:-
+Although a ngx.header looks and behaves like a table it is not.The ngx.header does not return an iteratable lua table. For that purpose use:-
 
 `ngx.resp.get_headers()` which is quite simillar to `ngx.req.get_headers()`.
-It simply returns a list of response headers that will be sent to the client. The value returned is a lua
+
+It simply returns a list of response headers that will be sent to the client. The value returned is a proper lua
 table which can be iterated upon.
 
 ```
@@ -1108,27 +1116,9 @@ local resp_headers = ngx.resp.get_headers()
 ```
 
 Finally if you use the response from  `ngx.location.capture` the headers are found in `res.header`. The result
-returned is a proper lua header and can be iterated upon. 
+returned is a proper lua table and can be iterated upon. 
 
-**The body of the response**
 
-The body of the response can only be accessed from the response that you get by issuing a request/subrequeest.
-Unlike response headers there is no way to access the response headers that are going to be sent without
-having access to the response object first.
-
-```
-
-local res = ngx.location.capture("/res_path")
-local body = res.body -- read the data
-res.body = "Some arbitrary body data" -- set the data to an aribrary value
-res.body = cjson.encode({a=1,b=2}) -- sending json with the body
-
-```
-
-The above snippet shows how you can set the body data of the response. The important thing to note here is that
-every time you set the data to a new value the  previous data is over written. So the first res.body statement will
-over write the orignial body returned from the response where as the second res.body statement will over write the
-first statement. 
 
 **The status of the response**
 
@@ -1141,4 +1131,9 @@ ngx.status = ngx.HTTP_NOT_MODIFIED -- set the status code to 304. Using ngx cons
 
 ```
 
+**The body of the response**
+
+Unlike response headers and response status there is no prepping stage for the response body.That is there is no ngx.res.body() method where you can set the body before sending the response. 
+
 ----
+
