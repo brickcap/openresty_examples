@@ -10,7 +10,7 @@
     - [The req](#the_req)
     - [The res](#the_res)
    
-5. Debugging openresty scripts
+5. [Debugging openresty scripts](#debug_openresty)
 
 
 -----
@@ -1046,7 +1046,8 @@ ngx lua allows setting the uri paramters as query strings and as lua tables.
 
 -----
 
-### The res
+<h4 id="the_res">The res</h4>
+
 
 Just like the req the ngx api allows you to modify the response that goes back to client. If
  you have read the `ngx.location.capture` section you should already be familliar with many
@@ -1133,7 +1134,41 @@ ngx.status = ngx.HTTP_NOT_MODIFIED -- set the status code to 304. Using ngx cons
 
 **The body of the response**
 
-Unlike response headers and response status there is no prepping stage for the response body.That is there is no ngx.res.body() method where you can set the body before sending the response. 
+Unlike response headers and response status there is no prepping stage for the response body.That is there is no `ngx.res.body()` method where you can set the body before sending the response. Openresty instead offeres two methods in `ngx.say()`
+ and `ngx.print()` any argument to the methods will be joined and sent as the res body. It is also important to note that calling any one of these methods means that the response will be sent back to the clinet. So the response headers and the response status that you have prepared up to this point will be sent back to the client.
+
+```
+ngx.print("Hello world") --sends  Hello world
+ngx.say("Hello world") -- sends Hello world/n that is the body appended with a newline
+ngx.say(cjson.encode({a=1,b=2})) -- you can also send json in the repsonse body
+
+```
 
 ----
+
+<h4 id="debug_openresty">Debugging openresty scripts</h4>
+
+Remember [our first configuration](#hello_world). Specifically this directive `error_log logs/error.log;. We defined all of the errors to be logged in the ./logs/error.log file. One of the ways to read from the error log is to set a tail on it like so:-
+
+`tail -f ./logs/error.log`
+
+The -f option is for "following" the error log and outputting the results when new data is added to it.
+
+There is however another method that involves configuring nginx conf file to tell it to automatically output the error to the terminal. Add this line to your configuration file:-
+
+`error_log /dev/stderr;`
+
+and now all your errors will be logged to the terminal.
+
+But error logs are only effective when an error occurs in our program. What if we want to say quyickly see the value of a variable? For these cases we can use a combination of `ngx.log()` and the nginx's logging constants to write to the error log. For instance we can do this:-
+
+```
+local body = res.body
+ngx.log(ngx.ERR,body)
+
+```
+
+and it will append the body data to the error log. One of the areas where I feel that openresty is lagging in the code inspection part. Unlike it's name  `ngx.print()` does not print to the console but instead outputs the data to the client. Although using a combination of displaying the error log on the console and openresty's log functions we can display results on our terminal but still it is not as good as other say `console.log()` in node js. Maybe the tooling for debugging openresty scripts will improve in the future. But it's just a minor impedence and does not bother much once you get used to it.
+
+
 
