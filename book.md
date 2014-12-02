@@ -8,8 +8,7 @@
     - [location.capture](#loc_cap)
     - [location capture faqs](#loc_cap_faq)
     - [The req](#the_req)
-    - [The res](#the_res)
-   
+    - [The res](#the_res)   
 5. [Debugging openresty scripts](#debug_openresty)
 
 
