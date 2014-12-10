@@ -625,7 +625,7 @@ What makes it so powerful you ask?
 
 Remember the nginx `location` directive?
 
-What `location` does is: It defines endpoints for clients to make requests to. For instance
+No? A quick recap:- It defines endpoints for clients to make requests to. For instance
 a `location /hello` tells the client that if you make a request to `/hello` I will give you
 back the results of code excuted inside the `location` directive. And important point
 to note here is that any request made by the client to this `location` endpoint is
@@ -638,7 +638,7 @@ the familliar http interface. Time for an example:-
 
 
 ```
-
+local res = ngx.location.capture("/go-go-go")
 
 ```
 
