@@ -811,7 +811,7 @@ You see the location capture provides a lua interface over what are known as [su
 All right we will now try to translate what a trivial location capture might look like if written using nginx configurations. For this we will be making use of the [echo module](http://wiki.nginx.org/HttpEchoModule#echo_location_async). Consider a single location capture like
 
 ```
-local res = ngx.location.capture("url")
+local res = ngx.location.capture("/url")
 ngx.say(res.body)
 
 ```
@@ -825,13 +825,16 @@ location /main {
     echo_location /url;   
 }
 
+
 location /url{
 echo hello_url;
 }
 
 ```
 
-Where as location.capture_multi sends out a series of parallel subrequests to location blocks. For example
+`curl http://localhost:8080/main` would return "hello_url" as the response.
+
+Where as location.capture_multi sends out a series of parallel subrequests to location blocks. For example:-
 
 ```
 local res1,res2 = ngx.location.capture_multi{{"/url1"},{"url2"}}
@@ -839,7 +842,7 @@ ngx.say(res1.body..res2.body)
 
 ```
 
-The above lua code initates multiple paralell subrequests to locations `url1`  and `url2`. The results are returned after all the requests have been completed. The equivalent nginx code would be
+the above lua code initates multiple paralell subrequests to locations `url1`  and `url2`. The results are returned after all the requests have been completed. The equivalent nginx code would be
 
 ```
 location /main{
@@ -859,11 +862,11 @@ echo hello_url2;
 
 ```
 
-So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrenly. Yet the location.capture does not return untill all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
+So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrently. Yet the location.capture does not return untill all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
 
-The location.capture() can also be interpreted as location.capture_multi{} with a single subrequest.
+The ngx.location.capture() can also be interpreted as location.capture_multi{} with a single subrequest.
 
-Of course these were just simplistic translations and as we have already seen location capture can go beyond making simple "GET" requests to location blocks. But hopefully the working of location.capture/capture_multi is a bit more clearer.
+Of course the code above is just a simplistic translation and as we have already seen location capture can go beyond making simple "GET" requests to location blocks. But hopefully the working of location.capture/capture_multi is a bit more clearer.
 
 ----
 
@@ -893,19 +896,20 @@ local res = ngx.location.capture("/google")
 
 <small><a href="#contents">Back to the contents</a></small>
 
-ngx api exposes a req object that allows us to configure explicitly our req parameters before sending it to
-the server. This means that you can easily add/remove http headers and body, configure the method of the
-req.
+ngx api exposes a req object that allows us to configure explicitly our req parameters before making a request to
+the server. This means that you can easily add/remove http headers, body, configure the method of the
+req etc
 
 On the other hand the ngx api also provides ability to read an incoming req from the client. Which means
-that you can read the http headers and the body check the method of the req and then send the response back.
-
+that you can read the http headers and the body check the method of the req and then create an appropriate response.
+ 
 Quite naturally the req table forms a very important part of ngx api. Let us take a deeper look at it 
 then:-
 
 **The headers of the request**
 
-`ngx.req.get_headers()` gives you back a table of headers which you can then query as usual. For example
+`ngx.req.get_headers()` gives you back a table of headers for an incoming request
+which you can then query as usual. For example
 
 ```
 local headers = ngx.req.get_headers()
@@ -918,7 +922,7 @@ local host = headers["Host"]
 
 ```
 
-Simillarly it's conter-part `ngx.req.set_header` is used to set a req header for outgoing requests
+Simillarly it's counter-part `ngx.req.set_header` is used to set a req header for outgoing requests
 
 ```
 ngx.req.set_header("Content-type","application/json")
@@ -942,7 +946,7 @@ ngx.req.read_body()
 
 local args = ngx.req.get_post_args()
 
--- just like the headers args is a lua table. 
+-- just like the headers, args is a lua table. 
 
 ```
 
@@ -962,7 +966,7 @@ ngx.req.set_method(ngx.HTTP_POST)
 
 **The uri of the request**
 
-ngx lua also allows to to change the uri to which the req is initiated by the client.
+ngx lua also allows you to change the uri from which the req was initiated by the client.
 
 ```
 ngx.req.set_uri("/foo")
@@ -977,7 +981,7 @@ ngx.req.set_uri("/foo",true)
 
 ```
 The context of execution  becomes important in this case since it mimicks the behaviour of nginx rewrite directive.
-The only allowed location where the optional bool parameter can be used as true is the rewrite_by_lua/rewrite_by_lua_file
+Thus the only allowed context where the optional bool parameter can be used as true is the rewrite_by_lua/rewrite_by_lua_file
 
 **The url arguments**
 
