@@ -9,6 +9,8 @@
     - [rewrite_by_lua](#rewrite_by_lua)
     - [access_by_lua](#access_by_lua)   
 4. [The ngx api](#the_ngx_api)
+    - [ngx.arg](#ngx_arg)
+    - [The constants](#constants)
     - [location.capture](#loc_cap)
     - [location capture faqs](#loc_cap_faq)
     - [The req](#the_req)
@@ -223,7 +225,6 @@ now `curl http://localhost:8080/by_file` should return
 on writing lua scripts. If you have a pretty bug lua application it is likely that your code will be divided
 into specific scripts that execute as directive handlers (like the content_by_lua script that we wrote above) and
 generic modules that will be used across many handlers (like say an authentication module that will be run across multiple content_by_lua handlers)
-
 2. Openresty follows lua convention of modules. So you can easily package a repeatable unit of code in a file and `require()` the file and use it's functions. We discuss more on this in the [organizing your lua code section](#organization)
 
 -----
@@ -567,10 +568,9 @@ By now you have probably understood what lua directives are and how
 they work. There are a few more directives.Some of them are utilities 
 and some for tweaking the ngx_lua behaviour. The important point to take away from this chapters are
 
-1.The *by_lua modules that tweak the nginx behaviour (for ex the rewrite_by_lua that is the lua
+1. The *by_lua modules that tweak the nginx behaviour (for ex the rewrite_by_lua that is the lua
 equivalent of nginx http rewrite) module are always run after the standard nginx modules.
-
-2.The choice of *by_lua module to use largely depends upon the problem that you are trying to solve. For example
+2. The choice of *by_lua module to use largely depends upon the problem that you are trying to solve. For example
 the init_by_lua module is used for initilization operations where as access_by_lua may be used to implement access policies for a location block. Personally among the various directives I find most use for content_by_lua. 
 
 The ones I have covered though are  ones that you will
@@ -607,7 +607,7 @@ was no need for us to `require` it.
 
 ----
 
-####ngx.arg
+<h1 id="ngx_arg">ngx.arg</h1>
 
 Context : `set_by_lua` and `body_filter_by_lua`
 
@@ -643,7 +643,7 @@ to a different value.
 
 ----
 
-#### constants
+<h1 id="constants">constants</h1>
 
 ngx_lua provides easy to remember "named" constants as an alternative to 
 using "numbered" status. For instance instead of sending a 301 redirect 
