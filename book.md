@@ -808,7 +808,7 @@ You see the location capture provides a lua interface over what are known as [su
 
 >when the Nginx core processes a subrequest, it just calls a few C functions behind the scene, without doing any kind of network or UNIX domain socket communication. For this reason, subrequests are extremely efficient.
 
-ALl right we will now try to translate what a trivial location capture migt look like if written using nginx configurations. For this we will be making use of the [echo module](http://wiki.nginx.org/HttpEchoModule#echo_location_async). Consider a single location capture like
+All right we will now try to translate what a trivial location capture might look like if written using nginx configurations. For this we will be making use of the [echo module](http://wiki.nginx.org/HttpEchoModule#echo_location_async). Consider a single location capture like
 
 ```
 local res = ngx.location.capture("url")
