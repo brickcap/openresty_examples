@@ -4,6 +4,10 @@
 2. [Our first openresty script](#hello_world)
 3. [The directives](#directives)
     - [Openresty's directives](#openresty_directives)
+    - [init_by_lua](#init_by_lua)
+    - [content_by_lua](#content_by_lua)
+    - [rewrite_by_lua](#rewrite_by_lua)
+    - [access_by_lua](#access_by_lua)   
 4. [The ngx api](#the_ngx_api)
     - [location.capture](#loc_cap)
     - [location capture faqs](#loc_cap_faq)
@@ -45,7 +49,7 @@ it's low memory usage and removes the barriers to developing applications with i
 The configuration files themselves. While they are quite flexible all they do is they limit the power of nginx to the set
 that is configurable. Sure you can do a lot but not anything beyond what is allowed. Here is a simple example for instance
 
-Suppose before forwarding the data `POSTed` to your application you want to do certain checks on it so that you can be sure that your application get's only the clean refined data to operate upon. Is there any easy way to validate the data posted to nginx before it is forwarded to your application server? If there is I could not find it. But in open resty this is as simple as
+Suppose before forwarding the data `POSTed` to your application you want to do certain checks on the data so that you can be sure that your application recieves only the clean refined data to operate upon. Is there any easy way to validate the data posted to nginx before it is forwarded to your application server? If there is I could not find it. But in open resty this is as simple as
 
 ```
 content_by_lua '
@@ -63,7 +67,7 @@ local clean_body_data = require("lib/validate").validate_body(post_args)
 
 ```
 
-This has the effect of simplifying your architecture by guaranteeing that any data that is posted to the proxy is valid. So your application layer can focus on operating upon it without worrying about cleansing it first. Once you learn open resty you will be able to identify many such functions that can be better delegated to a proxy. It will simplify your application and use nginx and all it's low resource, fast performance goodness to the fullest. Win win.
+This has the effect of simplifying your architecture by guaranteeing that any data that is posted by the proxy is valid. So your application layer can focus on working upon it without worrying about cleansing it first. Once you learn open resty you will be able to identify many such functions that can be better delegated to a proxy. It will simplify your application and allow you to use nginx and all it's low resource, fast performance goodness to the fullest. Win win.
 
 "**But my application is working. I don't want to change any thing**"
 
@@ -80,7 +84,7 @@ programmed before you can learn all of this before you finish your first cup of 
 **But wait I don't know any nginx**
 
 Not a problem. Nginx applications are written in what are known as configuration files. You can get
-most of it by just reading but if you encounter any problem the [nginx has a very detailed documentation](http://nginx.org/) and tonnes of community support so you should be able to google your way out of any trouble.
+most of it by just reading but if you encounter any problem the [nginx website has a very detailed documentation](http://nginx.org/) and tonnes of community support so you should be able to google your way out of any trouble.
 The entire guide is written with the assumption that
 
 1. You have no knowledge of nginx
@@ -232,15 +236,16 @@ Nginx comes with it's own mini programming language in which directives form the
 These directives are either block level or simple. Simple directives are 
 structured as the name of the directive and the name of the parameters. 
 The directive name and the parameters are separated by a space and the end of the 
-directive is marked by a `;`. The block level directives were similar with
-the only difference being  it was marked by `{` and
+directive is marked by a `;`. The block level directives are similar in with
+the only difference being  it is marked by `{` and
 `}` brackets. Within a block level directive there could be one or more 
-simple directives.These directives made up the configuration files.
+simple directives. These directives make up the configuration files. Time for an example:- 
 
 ```
 #location is a block level directive
 
 location /{
+
 #proxy_pass is a simple directive
 proxy_pass http://localhost:5984/; 
 
@@ -250,7 +255,10 @@ proxy_pass http://localhost:5984/;
 ```
 
 
-`nginx_lua` keeps the same structuring of the configuration files. 
+Openresty keeps the same structuring of the configuration files. You still create configuration files with
+simple and block level directives. Any nginx directive works with openresty in the same way as it would in a
+vanilla nginx application. However a new set of directives are introduced by openresty that serve as the
+entry point to the lua code.
 
 
 -----
@@ -259,25 +267,27 @@ proxy_pass http://localhost:5984/;
 
 <small><a href="#contents">Back to the top</a></small>
 
+> Openresty's directives serve as the entry point for execution of lua code.
+
 As we saw in the last chapter there is little difference between
 a vanilla nginx configuration and an nginx_lua configuration. In fact almost
 all of the nginx directives can be used as usual in an `nginx_lua` configuration
-file. However nginx_lua adds several new directives that enhances the configurability
-of nginx. We already looked at `content_by_lua` and `content_by_lua_file` directives in the last
-chapter. Here we will take a look at a few more intersting ones
+file. However openresty adds several new directives that enhances the configurability
+of nginx. We already looked at `content_by_lua` and `content_by_lua_file`.
+Here we will take a look at a few more intersting ones
 
 ####lua_code_cache 
 
 This directive turns the caching of lua modules on or off. By default the  
 the caching is turned on so that the lua modules are loaded once and then 
-just reused. This is a desirable effect and we would not want to reload 
+just reused. This is a desirable effect as we would not want to reload 
 modules on every request. So when would you want to turn the caching off? 
-During the developmental phase. It can be a pain 
+During the development phase. It can be a pain 
 to edit the configuration file, save it and then do an `nginx -s reload`
 over and over agin. 
 When caching is turned off  the module is reloaded 
 on every request so you can just edit, save your file and then 
-"refresh" to see the changes. Just be sure to turn the `lua_code_cache` 
+"refresh" the browser to see the changes. Just be sure to turn the `lua_code_cache` 
 off in production. 
 
 
@@ -328,9 +338,9 @@ Now edit the hello_world.lua to
 
 `ngx.say("<b>hello world</b>");` 
 
-and on `curl http://localhost:808/` you should see the response
+and on `curl http://localhost:8080/` you should see the response
 
-><b>hello world</b>
+`<b>hello world</b>`
 
 This makes our workflow of developing  ngx_lua applications much smoother.
 
@@ -353,15 +363,18 @@ reload the server manually. This automatic reload works only for lua files.
 
 #### init_by_lua 
 
-init_by lua directive runs the lua code
-specified by the parameter string on a global level.  
-This is most useful when you want to register 
+init_by_lua directive runs the lua code
+specified by the parameter string on a global level.
+As the name probably suggests the init_by_lua runs the lua code
+as nginx is initializing (loading the configuration files). As a result
+we can declare parameters here that will be used by directives in the configuration files after they are loaded. 
+Thus init_by_lua is useful when you want to register 
 lua global variables or start lua modules during 
 the nginx server start up. 
 
 Before we take a look at the example of `init_by_lua` a friendly warning.
 
-Refrain from using lua global variables. For most variables you should use a `local` 
+As a general principle refrain from using lua global variables. For most variables you should use a `local` 
 keyword to declare lua variables local to it's scope. And remember any variable declared
 without a `local` keyword is global in lua.
 
@@ -372,7 +385,13 @@ dog = "woof" -- avoid this form except for when it makes sense
 
 ```
 
-When does it make sense to use global varialbes?
+**Why refrain from using global variables?**
+
+Openresty is based on the principle of request isolation. Any request that goes to a location
+block say `location /one{}` is independant from the request that goes to the `location /two{}`. Every
+request handler has it's own set of global variables that are deleted at the end of the request cycle. 
+
+**When does it make sense to use global varialbes?**
 
 Suppose you want to use a module that parses JSON which will be used  
 in many handlers, or a database client that will be used in many handlers 
@@ -380,6 +399,34 @@ or any other module that will be used across many handlers then it makes sense
 to declare the variable global and even then init_by_lua should be the only place 
 where you do it.
 
+**An example to illustrate the difference b/w local and global variables**
+
+```
+<h3 id="init_by_lua">init_by_lua</h3>
+
+cjson = require("cjson") -- cjson is a global variable
+
+'
+
+location /one {
+local validate = require("lua/validate") -- validate is a local variable
+decoded_one = cjson.decode({hello="world"}) --decoded_one is a global variable
+}
+
+location /two{
+ngx.say(cjson.encode(decoded_one))
+}
+
+```
+
+In the example above we have two global variables. The first one `cjson` in the init_by_lua is
+a true global variable. One that can be accesed across request handlers. The second global variable
+that we declare in the `location /one` block is global only in the context of `/one` if we try to access
+this in the `/two` block we get a nil value. Besides having unexpected effects,that are hard to debug,
+global varibles have performance
+penalties of being looked up from a global table.
+Conclusion: global variables are to be used sparingly for things
+we want to be truly global. init_by_lua should be the only place to declare them. 
 
 `init_by_lua` has a variant in `init_by_lua_file` where you can supply a file 
 containing the lua code that will be run in a global context. 
@@ -405,12 +452,12 @@ location blocks.
 
 ----
 
-####set_by_lua 
+<h3 id="set_by_lua">set_by_lua</h3> 
 
 `set_by_lua` directive is equivalent to nginx's 
 set commands.  
 Quite predictably set is used in nginx to 'set' the value for a variable.  
-Simillarly `set_by_lua` allows you to set a variable by evaluating a lua code string. 
+Simillarly `set_by_lua` allows you to set a variable by evaluating a lua code string.
 
 
 Once more `set_by_lua` has a _file alternative in `set_by_lua_file` 
@@ -420,13 +467,13 @@ by executing the code in lua file.
 **Note** `set_by_lua blocks` the nginx's event loop during 
 it's execution therefore long time consuming 
 code sequences are best avoided here.
+
 So while a few arithmetic computations are fine loops should be 
 avoided. 
 
 `set_by_lua` works well with nginx's `set`
 command so the two can be used interchangeably. 
 The directives will run in the order in which they appear in the code.
-Works with set in HttpRewriteModule,  HttpSetMiscModule, and HttpArrayVarModule.
 
 
 ```
@@ -443,7 +490,7 @@ Works with set in HttpRewriteModule,  HttpSetMiscModule, and HttpArrayVarModule.
 
 ----
 
-#### content_by_lua
+<h3 id="content_by_lua">content_by_lua</h3>
 
 We already discussed this directive in the hello_ world chapter. 
 But now that we have more understanding of 
@@ -452,8 +499,6 @@ how the directives work we can see content_by_lua in a different light.
 Unlike the set_by_lua command that blocks the nginx's event loop content_by_lua directive
 runs in it's own spawned coroutine. Which means that it does not block the nginx's event loop
 and runs in a seperate environment. content_by_lua directive belongs to a special class of
-directives called the content handler 
-( they are not actually called that but you will see what I mean in a minute) directives. 
 They execute only in the context of `location` 
 directive (which if you recall our discussion at the beginning 
 of this chapter is a block level directive).
@@ -478,19 +523,17 @@ And yeah there is a `content_by_lua_file` :)
 
 ----
 
-####rewirte_by_lua
+<h3 id="rewrite_by_lua">rewrite_by_lua</h3>
 
 ngnx_lua equivalent of nginx's 
 [HttpRewriteModule](http://nginx.org/en/docs/http/ngx_http_rewrite_module.html). 
 Like the `content_by_lua` directive `rewrite_by_lua` runs in a spawned coroutine.
 The important thing to keep in mind here is that the directive always runs after the
-standard `http_rewrite_module`. So if you are using both keep that in mind.
+standard `http_rewrite_module`. So if you are using both keep that in mind. 
 
-Remember how the `set_by_lua` directive was blocking?
+The purpose of rewrite_by_lua is to lua-fy the nginx rewrite phase which rewrites is basically used to:-
 
-Well you can mitigate that to some extent now 
-If you are using `set_by_lua` for the `set` in `http_rewrite_module` 
-then you can safely replace it using `rewrite_by_lua`. It is non blocking. 
+> change request URI using regular expressions, return redirects, and conditionally select configurations. 
 
 `rewrite_by_lua` can make api calls 
 (we will see how to make api calls in the next chapter). 
@@ -504,12 +547,12 @@ executes lua code from a file.
 
 ----
 
-####access_by_lua
+<h3 id="access_by_lua">access_by_lua</h3>
 
 ngx_lua equivalent of
 [HttpAccessModule](http://nginx.org/en/docs/http/ngx_http_access_module.html)
 
-Two points to not here
+Two points to note here
 
 1. It runs in a seperate coroutine.
 
@@ -517,18 +560,23 @@ Two points to not here
 keep that in mind.
 
 Like `rewrite_by_lua` it can make api calls. 
-
-And there is a `access_by_lua_file`
+And yes there is a `access_by_lua_file`
 
 
 By now you have probably understood what lua directives are and how 
-they work. There are a few more directives: some of them are utilities 
-and some for tweaking the ngx_lua behaviour.
+they work. There are a few more directives.Some of them are utilities 
+and some for tweaking the ngx_lua behaviour. The important point to take away from this chapters are
+
+1.The *by_lua modules that tweak the nginx behaviour (for ex the rewrite_by_lua that is the lua
+equivalent of nginx http rewrite) module are always run after the standard nginx modules.
+
+2.The choice of *by_lua module to use largely depends upon the problem that you are trying to solve. For example
+the init_by_lua module is used for initilization operations where as access_by_lua may be used to implement access policies for a location block. Personally among the various directives I find most use for content_by_lua. 
 
 The ones I have covered though are  ones that you will
 be using most of the time. So instead of going on and on about the directives
 I will leave a [link to the reference](http://wiki.nginx.org/HttpLuaModule#Directives)
-and you can study them at your convenience.  
+and you can study them at your convenience.   
 
 For now we move on to the meatier stuff. The ngx_lua API.
 
