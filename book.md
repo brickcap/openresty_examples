@@ -589,8 +589,9 @@ For now we move on to the meatier stuff. The ngx_lua API.
 
 Ah the nginx API. This is where the magic happens. 
 Remember all those `by_lua` directives that we talk about in the last chapter? 
-They are all just there to execute lua api for nginx. In the words of the
-author of ngx_lua 
+They are all just there to execute lua code. The stuff that makes the lua code exciting however are the pa
+ckages provided within openresty that allow you to script and manipulate the behaviour of nginx.
+In the words of the author of openresty:- 
 
 > The various *_by_lua and *_by_lua_file configuration directives 
 serve as gateways to the Lua API within the nginx.conf file
