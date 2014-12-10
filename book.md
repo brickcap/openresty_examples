@@ -722,7 +722,7 @@ ngx.DEBUG
 ```
 ----
 
-#### ngx.location.capture
+<h3 id="loc_cap">ngx.location.capture</h3>
 
 Context: rewrite_by_lua, access_by_lua, content_by_lua
 
@@ -739,7 +739,7 @@ back the results of code excuted inside the `location` directive. And important 
 to note here is that any request made by the client to this `location` endpoint is
 an `http/tcp` request. 
 
-What `ngx.location.capture` does is that it issues an interal non blocking, syncrhonous request
+ `ngx.location.capture` issues an interal non blocking, syncrhonous request
 to a `locaiton`. Unlike the clients request which has to be http the location capture requests involve
 no http overhead. It is just a fast and light internal `c` level call while mimicking
 the familliar http interface. Time for an example:-
@@ -844,7 +844,7 @@ in the official docs.
 
 ----
 
-### ngx.location.capture.multi
+###ngx.location.capture.multi
 
 context: rewrite_by_lua*, access_by_lua*, content_by_lua* 
 
@@ -997,7 +997,9 @@ local res = ngx.location.capture("/google")
 
 ------
 
-### The req
+<h3 id="the_req">The req</h3>
+
+<small><a href="#contents">Back to the contents</a></small>
 
 ngx api exposes a req object that allows us to configure explicitly our req parameters before sending it to
 the server. This means that you can easily add/remove http headers and body, configure the method of the
@@ -1104,6 +1106,7 @@ ngx lua allows setting the uri paramters as query strings and as lua tables.
 
 <h4 id="the_res">The res</h4>
 
+<small><a href="#contents">Back to the contents</a></small>
 
 Just like the req the ngx api allows you to modify the response that goes back to client. If
  you have read the `ngx.location.capture` section you should already be familliar with many
