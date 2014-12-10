@@ -10,7 +10,7 @@
     - [The req](#the_req)
     - [The res](#the_res)   
 5. [Debugging openresty scripts](#debug_openresty)
-
+6. [Organizing your lua code](#organization)
 
 -----
 
@@ -212,6 +212,15 @@ Before we curl for the `/by_file` location we must reload nginx
 now `curl http://localhost:8080/by_file` should return
 
 `<p>hello world from lua</p>`
+
+**Some notes**
+
+1. The directory structure that we used in this example is just a suggestion. It has no bearing whatsoever
+on writing lua scripts. If you have a pretty bug lua application it is likely that your code will be divided
+into specific scripts that execute as directive handlers (like the content_by_lua script that we wrote above) and
+generic modules that will be used across many handlers (like say an authentication module that will be run across multiple content_by_lua handlers)
+
+2. Openresty follows lua convention of modules. So you can easily package a repeatable unit of code in a file and `require()` the file and use it's functions. We discuss more on this in the [organizing your lua code section](#organization)
 
 -----
 
@@ -1167,7 +1176,10 @@ ngx.log(ngx.ERR,body)
 
 ```
 
-and it will append the body data to the error log. One of the areas where I feel that openresty is lagging in the code inspection part. Unlike it's name  `ngx.print()` does not print to the console but instead outputs the data to the client. Although using a combination of displaying the error log on the console and openresty's log functions we can display results on our terminal but still it is not as good as other say `console.log()` in node js. Maybe the tooling for debugging openresty scripts will improve in the future. But it's just a minor impedence and does not bother much once you get used to it.
+and it will append the body data to the error log. One of the areas where I feel that openresty is lagging in the code inspection part. Unlike it's name  `ngx.print()` does not print to the console but instead outputs the data to the client. Although using a combination of displaying the error log on the console and openresty's log functions we can display results on our terminal but still it is not as good as say `console.log()` in node js. Maybe the tooling for debugging openresty scripts will improve in the future. But it's a minor impedence that does not bother much once you get used to it.
 
 
 
+<h1 id="organization"></h1>
+
+<small><a href="#contents">Back to the contents</a></small>
