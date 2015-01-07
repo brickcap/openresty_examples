@@ -1173,11 +1173,13 @@ If you want to know why check out [this question on stackoverflow](http://stacko
 
 <h3 id="structuring_openresty_apps">Organizing openresty code</h3>
 
+<small><a href="#contents">Back to the contents</a></small>
+
 When you are building openresty application there are usually working with the nginx
 configuration files and the lua code for various *by_lua_directives. Therefore structuring
-openresty applications invovles organizing the nginx's configuration files and organizing
+openresty applications involves organizing the nginx's configuration files and organizing
 the lua code. I have not come upon any guideline that lays down the principle for doing this
-so I am just going to write on how I structure my code for openresty appllications. Maybe that will
+so I am just going to write on how I structure my code for openresty applications. Maybe that will
 help you....
 
 **nginx configuration files**
@@ -1226,19 +1228,35 @@ location /paypal_adaptive_api{
 
 ```
 
-To nginx it makes no difference (for it it's all one big config file) but it helps me focus when I seperate out the 
+To nginx it makes no difference (for it it's all one big config file) but it helps me focus when I separate out the 
 configuration for location blocks from global configuration. Global configuration has hardly changed 
-since I first committed it but I regularly update the "routes.conf" file. The benifit of splitting on 
+since I first committed it but I regularly update the "routes.conf" file. The benefit of splitting on 
 location is that in one quick glance of your main file  you can tell how many servers you are using, 
 what their addresses are, what configuration they are working on. And this is very useful to me since in 
-one configuration I usually define multiuple server blocks depending upon the requirements. The main configuration 
+one configuration I usually define multiple server blocks depending upon the requirements. The main configuration 
 file the serves as a "Table of contents" for my application. 
 
 
 **The lua code**
 
-The organization of lua code is largely simillar to what you would do in any lua application. 
+The organization of lua code is largely similar to what you would do in any lua application. 
 You create lua files. For repeat behaviour extract out the functions into modules. Use those modules 
 in your files by requiring them. Basic stuff. 
 
-Openresty however allows you to add lua code  
+Openresty however allows you to add lua scripts as strings. Do not do this. It makes things 
+impossibly hard to debug, Plus writing code becomes a chore as the text editor refuses to analyze 
+the code and provide code completion etc. Lots of inconvenience that can be avoided by using 
+*by_lua_file directives.  
+
+
+As to the directory structure. I like to use the one that I defined in the beginning of the book. 
+
+logs folder- for the lua logs
+
+lua folder - for the lua code
+
+and all the configuration files in the parent directory. Simple and straightforward.
+
+But if you have a preferred way of organizing your code feel free to do it that way. All that 
+matters is that when you read your code it should be easy for you to understand it. Otherwise use whatever 
+that suits you. 
