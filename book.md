@@ -18,6 +18,7 @@
     - [The res](#the_res)   
 5. [Debugging openresty scripts](#debug_openresty)
 6. [Openresty global variable](#openresty_global_var)
+7. [Organizing code in openresty](#structuring_openresty_apps)
 
 -----
 
@@ -1170,3 +1171,74 @@ In fact global variables themselves are loaded into the _ENV table. Thus any glo
 that you access is a table look up which can be expensive as compared to accessing a local variable.
 If you want to know why check out [this question on stackoverflow](http://stackoverflow.com/questions/9132288/why-are-local-variables-accessed-faster-than-global-variables-in-lua).
 
+<h3 id="structuring_openresty_apps">Organizing openresty code</h3>
+
+When you are building openresty application there are usually working with the nginx
+configuration files and the lua code for various *by_lua_directives. Therefore structuring
+openresty applications invovles organizing the nginx's configuration files and organizing
+the lua code. I have not come upon any guideline that lays down the principle for doing this
+so I am just going to write on how I structure my code for openresty appllications. Maybe that will
+help you....
+
+**nginx configuration files**
+
+I always split my nginx configuration files on the server block. One portion of the file contains a set
+of global directives that will be used by all the blocks. This is the main file. The other file then contains
+location blocks for different server blocks and they are all included in the main configuration by
+the include directive. For example here is what my main configuration file looks like"- 
+
+```
+
+worker_processes  1;
+error_log /dev/stderr;
+#nginx  -p ./  -c ./wrinq.ngx.conf
+events {
+    worker_connections 1024;
+}
+http {
+    lua_code_cache off; #only during development
+    init_by_lua 'cjson = require("cjson")';
+    include       mime.types;
+    root ./;
+    server {
+        server_name localhost;
+        listen 3125;
+        include ./routes.conf;
+    
+    }
+}
+
+
+
+```
+
+Here is a portion of "routes.conf" 
+
+```
+location /couchdb{
+    proxy_pass http://127.0.0.1:5984/$arg_endpoint?$args;
+}
+
+location /paypal_adaptive_api{
+    resolver  8.8.8.8;
+    proxy_pass https://svcs.sandbox.paypal.com/AdaptivePayments/Pay;
+}
+
+```
+
+To nginx it makes no difference (for it it's all one big config file) but it helps me focus when I seperate out the 
+configuration for location blocks from global configuration. Global configuration has hardly changed 
+since I first committed it but I regularly update the "routes.conf" file. The benifit of splitting on 
+location is that in one quick glance of your main file  you can tell how many servers you are using, 
+what their addresses are, what configuration they are working on. And this is very useful to me since in 
+one configuration I usually define multiuple server blocks depending upon the requirements. The main configuration 
+file the serves as a "Table of contents" for my application. 
+
+
+**The lua code**
+
+The organization of lua code is largely simillar to what you would do in any lua application. 
+You create lua files. For repeat behaviour extract out the functions into modules. Use those modules 
+in your files by requiring them. Basic stuff. 
+
+Openresty however allows you to add lua code  
