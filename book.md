@@ -1127,7 +1127,7 @@ and it will append the body data to the error log. One of the areas where I feel
 
 
 
-<h1 id="openresty_global_var"></h1>
+<h1 id="openresty_global_var">Global variables in openresty</h1>
 
 <small><a href="#contents">Back to the contents</a></small>
 
