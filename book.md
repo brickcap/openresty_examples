@@ -14,7 +14,7 @@
     - [The req](#the_req)
     - [The res](#the_res)   
 5. [Debugging openresty scripts](#debug_openresty)
-6. [Organizing your lua code](#organization)
+6. [Openresty global variable](#openresty_global_var)
 
 -----
 
@@ -1127,6 +1127,43 @@ and it will append the body data to the error log. One of the areas where I feel
 
 
 
-<h1 id="organization"></h1>
+<h1 id="openresty_global_var"></h1>
 
 <small><a href="#contents">Back to the contents</a></small>
+
+In the previous sections we stressed on using local variables by default and
+refrain from using global variables in ngx_lua. I will try to expand a bit on the reason
+for the emphasis.
+
+ngx_lua is designed with the principle of request isolation in mind. According to this principle every
+request handler is run in it's own co routine with it's own environment. Two requests handlers do not
+share data between them and are executed independently of one another. It follows therefore that
+the global variables that are defined in the context of one request handler will not be accessible
+from another request handler. And if you try to access what you think is a global variable it
+will only result in nil errors.
+
+**But what about modules?**
+
+Openresty allows you to use your own modules as well as the modules that come with it. A statement
+like `local module = require("/dir/packer")`
+
+will load the package "packer" in the local variable "module". But what if we require this module again in another
+handler would lua reload the package again? No it wouldn't. That is because after package is loaded it is
+cached inside a `package.loaded` table in lua. Any subsequent requests for that module will
+simply read from the package.loaded table. So there will no performance penalties. Remember though that when you set `lua_code_cache` to off the packages are not cached and are reloaded on every request. 
+
+True global variables in ngx_lua can be declared in the init_by_lua directive. Any global variable that
+you declare here will be accessible from all the nginx's request handlers.
+
+So we can combine the facts that lua caches it's modules in a `package.loaded` table and
+that global variables can be declared in the init_by_lua directive and derive a very useful
+conclusion out of it. That any module you load in the init_by_lua will be accessible from
+all the request handler without any need of requiring it. So all those modules that
+you need across many different request handlers can be declared here. I find that
+the `cjson` module that come prepackaged with lua to be a good contender for global declaration since
+almost all my request handlers use it.
+
+In fact global variables themselves are loaded into the _ENV table. Thus any global variable
+that you access is a table look up which can be expensive as compared to accessing a local variable.
+If you want to know why check out [this question on stackoverflow](http://stackoverflow.com/questions/9132288/why-are-local-variables-accessed-faster-than-global-variables-in-lua).
+
