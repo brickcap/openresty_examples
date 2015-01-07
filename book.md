@@ -1179,7 +1179,7 @@ When you are building openresty applications you are usually working either with
 configuration files or with the lua code in various *by_lua_directives. Therefore structuring
 openresty applications involves organizing the nginx's configuration files and organizing
 the lua code. I have not come upon any guideline that lays down the principle for doing this
-so I am just going to write on how I structure my code for openresty applications. Maybe that will
+so I am just going to write down how I structure my code for openresty applications. Maybe that will
 help you....
 
 **nginx configuration files**
