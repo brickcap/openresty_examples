@@ -16,7 +16,7 @@ marked.setOptions({
 });
 
 buildify.task({
-    name:"conver-book",
+    name:"convert-book",
     task:function(){
 	console.log("starting book conversion....");
 	var book_template = fs.readFileSync(build_path+"book_template.html");
