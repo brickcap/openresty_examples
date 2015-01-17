@@ -1184,7 +1184,7 @@ Before we see the actual examples I would suggest that you
 [install cjson](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html#_installation) and
 [inspect](https://github.com/kikito/inspect.lua). I am using lua 5.2 for this guide and I've
 put cjson and inspect in `/usr/local/lib/lua/5.2/` directory. Finally you could copy and
-paste the code in the lua shell or you can just clone this file and execute it.
+paste the code in the lua shell or you can just clone [this file]() and execute it.
 
 ####Example 1 : Arrays in lua vs Arrays in json
 
@@ -1230,7 +1230,14 @@ local members = json_decoded.members
 
 ```
 
+How about the names of the members?
 
+```
+local user1 = members.names[1]
+
+```
+Note the index of the array. It is 1. But shouldn't it be zero? Well in lua the arrays are
+indexed by 
 
 <h3 id="structuring_openresty_apps">Organizing openresty code</h3>
 
