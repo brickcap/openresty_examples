@@ -18,8 +18,9 @@
     - [The res](#the_res)   
 5. [Debugging openresty scripts](#debug_openresty)
 6. [Openresty global variable](#openresty_global_var)
-7. [Organizing code in openresty](#structuring_openresty_apps)
-
+7. [Encoding and decoding JSON](#encode_decode_json)
+8. [Organizing code in openresty](#structuring_openresty_apps)
+ 
 -----
 
 <h1 id="why_openresty">Why openresty?</h1>
@@ -1170,6 +1171,66 @@ almost all my request handlers use it.
 In fact global variables themselves are loaded into the _ENV table. Thus any global variable
 that you access is a table look up which can be expensive as compared to accessing a local variable.
 If you want to know why check out [this question on stackoverflow](http://stackoverflow.com/questions/9132288/why-are-local-variables-accessed-faster-than-global-variables-in-lua).
+
+<h3 id="encode_decode_json"> Working with JSON in openresty</h3>
+
+Openresty comes with cjson pre installed. The usage of cjson in lua is pretty simple. You use
+`cjson.encode()` to encode the data into json and `cjson.decode` to decode it. However lua
+has a couple of unique features that might catch you off guard. So we will wakl through a
+couple of examples to see how lua encodes and decodes json using cjson. And yes there are
+other json encoders and decoders but cjson is considered the best among them.
+
+Before we see the actual examples I would suggest that you
+[install cjson](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html#_installation) and
+[inspect](https://github.com/kikito/inspect.lua). I am using lua 5.2 for this guide and I've
+put cjson and inspect in `/usr/local/lib/lua/5.2/` directory. Finally you could copy and
+paste the code in the lua shell or you can just clone this file and execute it.
+
+####Example 1 : Arrays in lua vs Arrays in json
+
+In lua arrays are represnted as tables. In fact lua has only one data structure
+tables. Every other data sturcture is implemented as an array. A json object like
+
+```
+
+{
+    "admins": {
+        "names": ["superuser"],
+        "roles": ["admins"]
+    },
+    "members": {
+        "names": ["user1","user2"],
+        "roles": ["developers"]
+    }
+}
+
+```
+
+would be converted into the following lua table. We will be using `cjson.decode()`
+
+```
+{
+  admins = {
+    names = { "superuser" },
+    roles = { "admins" }
+  },
+  members = {
+    names = { "user1", "user2" },
+    roles = { "developers" }
+  }
+}
+
+```
+as you can see the arrays are converted to lua tables. So how do we access the properties of this table?
+
+Suppose we want to access the members of the decoded json. It is quite simple
+
+```
+local members = json_decoded.members
+
+```
+
+
 
 <h3 id="structuring_openresty_apps">Organizing openresty code</h3>
 
