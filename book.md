@@ -1176,7 +1176,7 @@ If you want to know why check out [this question on stackoverflow](http://stacko
 
 Openresty comes with cjson pre installed. The usage of cjson in lua is pretty simple. You use
 `cjson.encode()` to encode the data into json and `cjson.decode` to decode it. However lua
-has a couple of unique features that might catch you off guard. So we will wakl through a
+has a couple of unique features that might catch you off guard. So we will walk through a
 couple of examples to see how lua encodes and decodes json using cjson. And yes there are
 other json encoders and decoders but cjson is considered the best among them.
 
@@ -1186,12 +1186,12 @@ Before we see the actual examples I would suggest that you
 put cjson and inspect in `/usr/local/lib/lua/5.2/` directory. Finally you could copy and
 paste the code in the lua shell or you can just clone
 [this file](https://github.com/brickcap/openresty_examples/blob/master/JSON/encode_decode.lua)
-and execute it (in the terminal type lua  followed by filename).
+and execute it (in the terminal type lua  followed by file name).
 
 
 JSON basically consists of only two data structures. An object/hash/dictionary and an array. An object in json will be translated to a table in lua. An array in json will also be translated to a table in lua....
-That is becuase in lua arrays are represnted as tables. In fact lua has only one data structure
-tables. Every other data sturcture is implemented on the top of a table. For example this is a simple table in lua
+That is because in lua arrays are represented as tables. In fact lua has only one data structure
+tables. Every other data structure is implemented on the top of a table. For example this is a simple table in lua
 
 
 ```
@@ -1275,7 +1275,7 @@ lua_arr[3] -- three
 this might be confusing at first as it is different from almost every other programming language but once
 you are aware of this fact it won't cause any other problems.
 cjson decodes null in a json to a lua [lightuserdata](http://www.lua.org/pil/28.5.html) and gives you
-cjson.null for comparision. 
+cjson.null for comparison. 
 
 This should help you deal with any kind of json
 you come across in lua. If you encounter any problems refer the
