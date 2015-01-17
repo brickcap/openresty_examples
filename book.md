@@ -1184,14 +1184,38 @@ Before we see the actual examples I would suggest that you
 [install cjson](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html#_installation) and
 [inspect](https://github.com/kikito/inspect.lua). I am using lua 5.2 for this guide and I've
 put cjson and inspect in `/usr/local/lib/lua/5.2/` directory. Finally you could copy and
-paste the code in the lua shell or you can just clone [this file]() and execute it.
+paste the code in the lua shell or you can just clone
+[this file](https://github.com/brickcap/openresty_examples/blob/master/JSON/encode_decode.lua)
+and execute it (in the terminal type lua  followed by filename).
 
-####Example 1 : Arrays in lua vs Arrays in json
 
-In lua arrays are represnted as tables. In fact lua has only one data structure
-tables. Every other data sturcture is implemented as an array. A json object like
+JSON basically consists of only two data structures. An object/hash/dictionary and an array. An object in json will be translated to a table in lua. An array in json will also be translated to a table in lua....
+That is becuase in lua arrays are represnted as tables. In fact lua has only one data structure
+tables. Every other data sturcture is implemented on the top of a table. For example this is a simple table in lua
+
 
 ```
+
+local simple_table = {
+des = "I am a simple table"
+}
+
+```
+This seems pretty close to what a json object looks like right? To access the properties of this table 
+you do `simple_table.des` or `simple_table["des"]`. Now here is what an array looks like in lua:-
+
+```
+local simple_arr = {"three","little","pigs"}
+
+```
+
+just like a table except without the keys. In array the items are indexed by numbers starting from 1 (more on this below) so you access an array just like you access a table except with numbers instead of named keys. So a simple_arr[1] will give "three" as the output. simple_arr[2] will give "little" as output and so on.
+ 
+
+Let us now inspect how a complex json object is decoded
+
+```
+//json object
 
 {
     "admins": {
@@ -1206,7 +1230,7 @@ tables. Every other data sturcture is implemented as an array. A json object lik
 
 ```
 
-would be converted into the following lua table. We will be using `cjson.decode()`
+When decoded using `cjson.decode()` it would be converted into the following lua table.  
 
 ```
 {
@@ -1237,7 +1261,27 @@ local user1 = members.names[1]
 
 ```
 Note the index of the array. It is 1. But shouldn't it be zero? Well in lua the arrays are
-indexed by 
+indexed starting from 1. So for example:-
+
+```
+local lua_arr = {'one','two','three'}
+
+lua_arr[1] -- one
+lua_arr[2] --two
+lua_arr[3] -- three
+
+```
+
+this might be confusing at first as it is different from almost every other programming language but once
+you are aware of this fact it won't cause any other problems.
+cjson decodes null in a json to a lua [lightuserdata](http://www.lua.org/pil/28.5.html) and gives you
+cjson.null for comparision. 
+
+This should help you deal with any kind of json
+you come across in lua. If you encounter any problems refer the
+[cjson manual](http://www.kyne.com.au/~mark/software/lua-cjson-manual.html) it is quite small and easy to understand. 
+
+
 
 <h3 id="structuring_openresty_apps">Organizing openresty code</h3>
 
