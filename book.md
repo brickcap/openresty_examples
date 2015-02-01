@@ -559,7 +559,7 @@ Like the `content_by_lua` directive `rewrite_by_lua` runs in a spawned coroutine
 The important thing to keep in mind here is that the directive always runs after the
 standard `http_rewrite_module`. So if you are using both keep that in mind. 
 
-The purpose of rewrite_by_lua is to lua-fy the nginx rewrite phase which rewrites is basically used to:-
+The purpose of rewrite_by_lua is to lua-fy the nginx rewrite phase which is basically used to:-
 
 > change request URI using regular expressions, return redirects, and conditionally select configurations. 
 
@@ -593,7 +593,7 @@ And yes there is a `access_by_lua_file`
 
 By now you have probably understood what lua directives are and how 
 they work. There are a few more directives.Some of them are utilities 
-and some for tweaking the ngx_lua behaviour. The important point to take away from this chapters are
+and some for tweaking the ngx_lua behaviour. The important points to take away from this chapter are
 
 1. The *by_lua modules that tweak the nginx behaviour (for ex the rewrite_by_lua that is the lua
 equivalent of nginx http rewrite) module are always run after the standard nginx modules.
@@ -615,9 +615,9 @@ For now we move on to the meatier stuff. The ngx_lua API.
 <small><a href="#contents">Back to the contents</a></small>
 
 Ah the nginx API. This is where the magic happens. 
-Remember all those `by_lua` directives that we talk about in the last chapter? 
-They are all just there to execute lua code. The stuff that makes the lua code exciting however are the pa
-ckages provided within openresty that allow you to script and manipulate the behaviour of nginx.
+Remember all those `by_lua` directives that we talked about in the last chapter? 
+They are all just there to execute lua code. The stuff that makes the lua code exiting to write are all the  
+packages provided within openresty that allow you to script and manipulate the behaviour of nginx.
 In the words of the author of openresty:- 
 
 > The various *_by_lua and *_by_lua_file configuration directives 
@@ -654,10 +654,19 @@ to note here is that any request made by the client to this `location` endpoint 
 an `http/tcp` request. 
 
  `ngx.location.capture` issues an interal non blocking, syncrhonous request
-to a `locaiton`. Unlike the clients request which has to be http the location capture requests involve
+to a `locaiton`. Unlike the clients request which has to be http the location_capture requests involve
 no http overhead. It is just a fast and light internal `c` level call while mimicking
 the familliar http interface. Time for an example:-
 
+suppose you have a location:
+
+```
+location /go-go-go{
+ ###does something in a hurry
+}
+
+```
+You can make a call to this endpoint using location capture like so"-
 
 ```
 local res = ngx.location.capture("/go-go-go")
