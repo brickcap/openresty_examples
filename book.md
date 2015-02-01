@@ -435,7 +435,7 @@ ngx.say(cjson.encode(decoded_one))
 ```
 
 In the example above we have two global variables. The first one `cjson` in the init_by_lua is
-a true global variable. One that can be accesed across request handlers. The second global variable
+a true global variable. One that can be accesed across request handlers. The second global variable (decoded_one)
 that we declare in the `location /one` block is global only in the context of `/one` if we try to access
 this in the `/two` block we get a nil value. Besides having unexpected effects,that are hard to debug,
 global varibles have performance
