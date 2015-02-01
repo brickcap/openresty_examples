@@ -820,7 +820,7 @@ local res1,res2 = ngx.location.capture.multi{
 
 ```
 
-Every request in multi is contained within it's own table which can perform all of things that
+Every request in location.capture_multi is contained within it's own table which can do all of things that
 we saw in a simple `ngx.location.capture`. Cool isn't it?
 
 -----
@@ -902,7 +902,7 @@ Of course the code above is just a simplistic translation and as we have already
 
 **Q**: Can I make external http requests with location capture?
 
-**A**: You sure can! Yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But the subrequests are executed independantly. This means that even though the subrequest is not dealing with http the location block themselves can make any kind of request that they want. Like we saw in the examples above the following will absolutely work:-
+**A**: You sure can! Yes the subrequests are internal. Yes there is no http involved while calling the subrequests. But the subrequests are executed independently. This means that even though the subrequest is not dealing with http the location block themselves can make any kind of request that they want. Like we saw in the examples above the following will absolutely work:-
 
 ```
 
@@ -1026,7 +1026,15 @@ ngx.req.set_uri_args({ a = 3, b = {5, 6} })
 
 ```
 
-ngx lua allows setting the uri paramters as query strings and as lua tables.
+ngx lua allows setting the uri paramters as query strings and as lua tables. You can get the url arguments using 
+`ngx.req.get_uri_args()`.
+
+
+```
+local is_test = ngx.req.get_uri_args()["test"]
+
+```
+The get_uri_args() returns a lua table that can be queried like a normal lua table. 
 
 -----
 
