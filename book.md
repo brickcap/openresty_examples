@@ -722,7 +722,7 @@ Etag='"E0KG1DRLA505ILRLPEJOPM679"'
 
 ```
 So you access the header the same way in which you access a key from any lua table. For instance to access
-the vary header we do `res.header["Vary"]`.
+the "vary" header we do `res.header["Vary"]`.
 
 Thus far we have seen how to make only simple requests
 the internal uri using the `ngx.location.capture` but the api
@@ -761,8 +761,8 @@ The above sample illustrates the point. Here the `ngx.location.capture` passes i
 2. body: the body to send to the subrequest. Here it is json encoded.
 3. args: the query strings that we just discussed.
 
-While method,body and args are th ones that you will find yourself using more frequently just for the
-sake of completeness a complete list of all the optional keys that can be passed to the table can be found
+While method,body and args are the ones that you will find yourself using more frequently just for the
+sake of completeness a list of all the optional keys that can be passed to the table can be found
 in the official docs.
 
 ----
@@ -772,15 +772,15 @@ in the official docs.
 context: rewrite_by_lua*, access_by_lua*, content_by_lua* 
 
 Oh yes :) Take the `ngx.location.capture` and level it up by lua's superpowers.
-One of the unique thigs about lua is that a function can have multiple return values. If this is your
-first time wokrig with lua then it might be a bit hard to to figure out when to use this feature. But
+One of the unique things about lua is that a function can have multiple return values. If this is your
+first time working with lua then it might be a bit hard to to figure out when to use this feature. But
 luckily ngx lua makes the application of this unique concept quite obvious. Check this out:-
 
 ```
 local home,about,contact = ngx.location.capture.multi{{"/home"},{"/about"},{"/contact"}}
 
 ```
-The above snipped of code is just like `ngx.location.capture` that we talked about before. The
+The above snippet of code is just like `ngx.location.capture` that we talked about before. The
 only difference here is that instead of making a subrequest to a single uri you can make
 subrequests to multiple uris with a single line of code. Two important things to note here is that
 
