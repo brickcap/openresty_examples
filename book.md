@@ -1,6 +1,6 @@
 #Definitely an openresty guide
 *It's neither comprehensive nor definitive
-but it will certainly hep you get started*
+but it will certainly help you get started*
 
 <h1 id="contents">Contents</h1>
 
