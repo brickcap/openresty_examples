@@ -479,7 +479,7 @@ Once more `set_by_lua` has a _file alternative in `set_by_lua_file`
 that allows you to set a variable 
 by executing the code in lua file. 
 
-**Note** `set_by_lua blocks` the nginx's event loop during 
+**Note** `set_by_lua` blocks the nginx's event loop during 
 it's execution therefore long time consuming 
 code sequences are best avoided here.
 
@@ -513,7 +513,7 @@ how the directives work we can see content_by_lua in a different light.
 
 Unlike the set_by_lua command that blocks the nginx's event loop content_by_lua directive
 runs in it's own spawned coroutine. Which means that it does not block the nginx's event loop
-and runs in a seperate environment. content_by_lua directive belongs to a special class of
+and runs in a seperate environment. content_by_lua is a special class of directive called content handlers.
 They execute only in the context of `location` 
 directive (which if you recall our discussion at the beginning 
 of this chapter is a block level directive).
@@ -533,6 +533,19 @@ root /data/me;
 if a request is made to `/me` handle the content in `/data/me` would be served.
 A location block should have only one content handler. Do not mix nginx's
 default content handlers like proxy_pass or directory mappers with ngx_lua's content_by_lua.
+
+The `content_by_lua` directive can execute lua code that is contained within it. For ex:
+
+```
+location /test{
+content_by_lua '
+local is_test = ngx.req.get_uri_args()["test"]
+';
+}
+
+```
+The above `content_by_lua` directive executes a single line of lua code which
+just stores the value of query string parameter called test in a local variable called is_test. 
 
 And yeah there is a `content_by_lua_file` :)
 
