@@ -393,8 +393,11 @@ dog = "woof" -- avoid this form except for when it makes sense
 **Why refrain from using global variables?**
 
 Openresty is based on the principle of request isolation. Any request that goes to a location
-block say `location /one{}` is independant from the request that goes to the `location /two{}`. Every
-request handler has it's own set of global variables that are deleted at the end of the request cycle. 
+block say `location /one{}` is independent from the request that goes to the `location /two{}`. Every
+request handler has it's own set of global variables that are deleted at the end of the request cycle.
+This means that if you declare a variable as global in a location block that global variable
+will be inaccessible from another location block. Since as we discussed above each location block
+has it's own set of global variables that are isolated from each other. 
 
 **When does it make sense to use global varialbes?**
 
