@@ -55,7 +55,7 @@ it's low memory usage and removes the barriers to developing applications with i
 The configuration files themselves. While they are quite flexible all they do is they limit the power of nginx to the set
 that is configurable. Sure you can do a lot but not anything beyond what is allowed. Here is a simple example for instance
 
-Suppose before forwarding the data `POSTed` to your application you want to do certain checks on the data so that you can be sure that your application recieves only the clean refined data to operate upon. Is there any easy way to validate the data posted to nginx before it is forwarded to your application server? If there is I could not find it. But in open resty this is as simple as
+Suppose before forwarding the data `POSTed` to your application you want to do certain checks on the data so that you can be sure that your application receives only the clean refined data to operate upon. Is there any easy way to validate the data posted to nginx before it is forwarded to your application server? If there is I could not find it. But in open resty this is as simple as
 
 ```
 content_by_lua '
@@ -78,7 +78,7 @@ This has the effect of simplifying your architecture by guaranteeing that any da
 "**But my application is working. I don't want to change any thing**"
 
 I am not asking you to change. Remember that openresty is still nginx. Everything that was working will continue to
-work. Openresty just gives you an opprotunity to make use of nginx in ways that you might not have considerd before. You have nothing to loose and much to gain. 
+work. Openresty just gives you an opportunity to make use of nginx in ways that you might not have considered before. You have nothing to loose and much to gain. 
 
 **What do you need to start learning open resty?**
 
@@ -173,9 +173,9 @@ you should see a response
 And congratulations you have written you first openresty script. 
 Now I don't know about you but wrapping code scripts 
 around strings does not look pretty to me. 
-Wouldn't it be nice if we could create a sperate file for 
+Wouldn't it be nice if we could create a separate file for 
 lua scripts and include it in the nginx configuration files? 
-`content_by_lua_file` allows us to do just that. Let us create a seperate directory `lua`  
+`content_by_lua_file` allows us to do just that. Let us create a separate directory `lua`  
 
 `mkdir lua`
 
@@ -185,7 +185,7 @@ And now create a lua file called `hello_world.lua` containing just one line of c
 
  
 Now we will create another location block in the `nginx.conf` 
-file that will use `content_by_lua_file` istead of `content_by_lua`. 
+file that will use `content_by_lua_file` instead of `content_by_lua`. 
 Here is what the final configuration looks like 
 
 
@@ -279,7 +279,7 @@ a vanilla nginx configuration and an nginx_lua configuration. In fact almost
 all of the nginx directives can be used as usual in an `nginx_lua` configuration
 file. However openresty adds several new directives that enhances the configurability
 of nginx. We already looked at `content_by_lua` and `content_by_lua_file`.
-Here we will take a look at a few more intersting ones
+Here we will take a look at a few more interesting ones
 
 ####lua_code_cache 
 
@@ -289,7 +289,7 @@ just reused. This is a desirable effect as we would not want to reload
 modules on every request. So when would you want to turn the caching off? 
 During the development phase. It can be a pain 
 to edit the configuration file, save it and then do an `nginx -s reload`
-over and over agin. 
+over and over again. 
 When caching is turned off  the module is reloaded 
 on every request so you can just edit, save your file and then 
 "refresh" the browser to see the changes. Just be sure to turn the `lua_code_cache` 
@@ -347,14 +347,14 @@ and on `curl http://localhost:8080/` you should see the response
 
 `<b>hello world</b>`
 
-This makes our workflow of developing  ngx_lua applications much smoother.
+This makes our work flow of developing  ngx_lua applications much smoother.
 
 **Note** as you might have already guessed `lua_code_cache` works only for
 `*by_lua_file`  directives. It will have no effect upon `*by_lua` directives.
 
 nginx block level rules apply to the `lua_code_cache` directive. Which
 means if you set `lua_code_cache` off in a top level directive all the other
-lower lever directives will pick up on this configuration. Simillary you can achieve
+lower lever directives will pick up on this configuration. Similarly you can achieve
 isolation for particular directives by turning the caching off only
 for those directives. 
 
@@ -399,7 +399,7 @@ This means that if you declare a variable as global in a location block that glo
 will be inaccessible from another location block. Since as we discussed above each location block
 has it's own set of global variables that are isolated from each other. 
 
-**When does it make sense to use global varialbes?**
+**When does it make sense to use global variables?**
 
 Suppose you want to use a module that parses JSON which will be used  
 in many handlers, or a database client that will be used in many handlers 
@@ -435,10 +435,10 @@ ngx.say(cjson.encode(decoded_one))
 ```
 
 In the example above we have two global variables. The first one `cjson` in the init_by_lua is
-a true global variable. One that can be accesed across request handlers. The second global variable (decoded_one)
+a true global variable. One that can be accessed across request handlers. The second global variable (decoded_one)
 that we declare in the `location /one` block is global only in the context of `/one` if we try to access
 this in the `/two` block we get a nil value. Besides having unexpected effects,that are hard to debug,
-global varibles have performance
+global variables have performance
 penalties of being looked up from a global table.
 Conclusion: global variables are to be used sparingly for things
 we want to be truly global. init_by_lua should be the only place to declare them. 
@@ -462,7 +462,7 @@ also applies to `init_by_lua_file`.
 In the location block above we are using `cjson` global
 variable that was declared in an `init_by_lua_file` to encode
 lua tables in json. `cjson` was a good contender for the global
-varibale declaration because we are going to be using it in many
+variable declaration because we are going to be using it in many
 location blocks. 
 
 ----
@@ -472,7 +472,7 @@ location blocks.
 `set_by_lua` directive is equivalent to nginx's 
 set commands.  
 Quite predictably set is used in nginx to 'set' the value for a variable.  
-Simillarly `set_by_lua` allows you to set a variable by evaluating a lua code string.
+Similarly `set_by_lua` allows you to set a variable by evaluating a lua code string.
 
 
 Once more `set_by_lua` has a _file alternative in `set_by_lua_file` 
@@ -513,7 +513,7 @@ how the directives work we can see content_by_lua in a different light.
 
 Unlike the set_by_lua command that blocks the nginx's event loop content_by_lua directive
 runs in it's own spawned coroutine. Which means that it does not block the nginx's event loop
-and runs in a seperate environment. content_by_lua is a special class of directive called content handlers.
+and runs in a separate environment. content_by_lua is a special class of directive called content handlers.
 They execute only in the context of `location` 
 directive (which if you recall our discussion at the beginning 
 of this chapter is a block level directive).
@@ -582,7 +582,7 @@ ngx_lua equivalent of
 
 Two points to note here
 
-1. It runs in a seperate coroutine.
+1. It runs in a separate coroutine.
 
 2. It runs after the standard nginx  `http_access module` so if you are mixing the two
 keep that in mind.
@@ -598,7 +598,7 @@ and some for tweaking the ngx_lua behaviour. The important points to take away f
 1. The *by_lua modules that tweak the nginx behaviour (for ex the rewrite_by_lua that is the lua
 equivalent of nginx http rewrite) module are always run after the standard nginx modules.
 2. The choice of *by_lua module to use largely depends upon the problem that you are trying to solve. For example
-the init_by_lua module is used for initilization operations where as access_by_lua may be used to implement access policies for a location block. Personally among the various directives I find most use for content_by_lua. 
+the init_by_lua module is used for initialization operations where as access_by_lua may be used to implement access policies for a location block. Personally among the various directives I find most use for content_by_lua. 
 
 The ones I have covered though are  ones that you will
 be using most of the time. So instead of going on and on about the directives
@@ -630,7 +630,7 @@ and are always available to the lua directives. Which clears up a few
 things for us. Remember how in `*_by_lua_file` directives we
 could simply call the methods on `ngx` package even without requiring it?
 As you can probably guess, the reason for it was that the `ngx` package
-was already availaible to the directive globally. So there
+was already available to the directive globally. So there
 was no need for us to `require` it.
 
 ----
@@ -649,14 +649,14 @@ Remember the nginx `location` directive?
 
 No? A quick recap:- It defines endpoints for clients to make requests to. For instance
 a `location /hello` tells the client that if you make a request to `/hello` I will give you
-back the results of code excuted inside the `location` directive. And important point
+back the results of code executed inside the `location` directive. And important point
 to note here is that any request made by the client to this `location` endpoint is
 an `http/tcp` request. 
 
- `ngx.location.capture` issues an interal non blocking, syncrhonous request
-to a `locaiton`. Unlike the clients request which has to be http the location_capture requests involve
+ `ngx.location.capture` issues an internal non blocking, synchronous request
+to a `location`. Unlike the clients request which has to be http the location_capture requests involve
 no http overhead. It is just a fast and light internal `c` level call while mimicking
-the familliar http interface. Time for an example:-
+the familiar http interface. Time for an example:-
 
 suppose you have a location:
 
@@ -702,15 +702,15 @@ then the request will work. It is important to understand that `ngx.location.cap
 only on internal requests (or on locations that are defined in the configuration files)
 but that location can make an external http request.
 
-So now back to the topic. The `res` returned by `ngx.location.capture` contians ..
+So now back to the topic. The `res` returned by `ngx.location.capture` contains ..
 well the response of the subrequest. Let us examine it.
 
 1. res.status:- the status code of the completed request.
 2. res.header-: the headers returned by the response.
 3. res.body:- the body in the response which may be ...
-4. res.truncated-: boolean that incaded if the body is truncated or not.
+4. res.truncated-: boolean that indicated if the body is truncated or not.
 
-res.status, res.body and res.truncated are pretty straightforwad. res.header require more examination.
+res.status, res.body and res.truncated are pretty straightforward. res.header require more examination.
 
 The response headers are simply a lua table. Here is what it might look like
 
@@ -727,7 +727,7 @@ the "vary" header we do `res.header["Vary"]`.
 Thus far we have seen how to make only simple requests
 the internal uri using the `ngx.location.capture` but the api
 is far more flexible. You can pass query strings directly in
-the url or by uisng the args option. For instance:-
+the url or by using the args option. For instance:-
 
 ```
 local res= ngx.location.capture("/hello?a=1&b=2")
@@ -744,7 +744,7 @@ local res = ngx.location.caputre("/hello",{args={a=1,b=2}})
 are equivalent. In both the cases a subrequest will be made to `/hello?a=1&b=2`
 
 
-Infact the opitonal table can hold a lot more keys than just an `args`.
+In fact the optional table can hold a lot more keys than just an `args`.
 
 ```
    local account_page = ngx.location.capture("/get_account",
@@ -847,7 +847,7 @@ ngx.say(res.body)
 ```
 
 
-intiates a subrequest at nginx's level and it's equivalent to:-
+initiates a subrequest at nginx's level and it's equivalent to:-
 
 
 ```
@@ -872,7 +872,7 @@ ngx.say(res1.body..res2.body)
 
 ```
 
-the above lua code initates multiple paralell subrequests to locations `url1`  and `url2`. The results are returned after all the requests have been completed. The equivalent nginx code would be
+the above lua code initiates multiple parallel subrequests to locations `url1`  and `url2`. The results are returned after all the requests have been completed. The equivalent nginx code would be
 
 ```
 location /main{
@@ -892,7 +892,7 @@ echo hello_url2;
 
 ```
 
-So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrently. Yet the location.capture does not return untill all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
+So by "synchronous yet non blocking" we mean that the subrequests are executed independently and concurrently. Yet the location.capture does not return until all the subrequests have been completed. In case you have multiple subrequests using location.capture_multi the time taken to serve all the requests will be equal the time taken by the longest request.
 
 The ngx.location.capture() can also be interpreted as location.capture_multi{} with a single subrequest.
 
@@ -952,7 +952,7 @@ local host = headers["Host"]
 
 ```
 
-Simillarly it's counter-part `ngx.req.set_header` is used to set a req header for outgoing requests
+Similarly it's counter-part `ngx.req.set_header` is used to set a req header for outgoing requests
 
 ```
 ngx.req.set_header("Content-type","application/json")
@@ -968,7 +968,7 @@ a proxy req from the client to the server.
 
 **The body of the request**
 
-ngx provides `ngx.req.read_body()` to read all of the body data. Once the body has been read a convinence method 
+ngx provides `ngx.req.read_body()` to read all of the body data. Once the body has been read a convenience method 
 is provided in `ngx.req.get_body_data` and `ngx.req.get_post_args` which return a string/lua table.
 
 ```
@@ -1010,7 +1010,7 @@ parameter that tells nginx to keep searching for newly set uri location
 ngx.req.set_uri("/foo",true)
 
 ```
-The context of execution  becomes important in this case since it mimicks the behaviour of nginx rewrite directive.
+The context of execution  becomes important in this case since it mimics the behaviour of nginx rewrite directive.
 Thus the only allowed context where the optional bool parameter can be used as true is the rewrite_by_lua/rewrite_by_lua_file
 
 **The url arguments**
@@ -1026,7 +1026,7 @@ ngx.req.set_uri_args({ a = 3, b = {5, 6} })
 
 ```
 
-ngx lua allows setting the uri paramters as query strings and as lua tables. You can get the url arguments using 
+ngx lua allows setting the uri parameters as query strings and as lua tables. You can get the url arguments using 
 `ngx.req.get_uri_args()`.
 
 
@@ -1043,7 +1043,7 @@ The get_uri_args() returns a lua table that can be queried like a normal lua tab
 <small><a href="#contents">Back to the contents</a></small>
 
 Just like the req the ngx api allows you to modify the response that goes back to client. If
- you have read the `ngx.location.capture` section you should already be familliar with many
+ you have read the `ngx.location.capture` section you should already be familiar with many
 of the functions that allow you to modify the response. Nevertheless we will take a better look here: -
 
 
@@ -1059,14 +1059,14 @@ local content_type = ngx.header.content_type -- reads "Content-Type header"
 
 ```
 
-Note that any '-' in a header is replaced by a '_'. You can still read the header in the orignal form like so:-
+Note that any '-' in a header is replaced by a '_'. You can still read the header in the original form like so:-
 
 ```
 
 local content_type_orig = ngx.header["Content-type"]
 
 ```
-You can set a value to the header in the same way you set a vlaue to key in a lua table.
+You can set a value to the header in the same way you set a value to key in a lua table.
 
 ```
 ngx.header.content_type = "application/json" -- sets the content type header
@@ -1080,7 +1080,7 @@ ngx.header["My-Multi-Value-Header"] = {"1","2"}
 
 ```
 
-Simillarly if you read a multivalued header a list will be returned as a response.
+Similarly if you read a multivalued header a list will be returned as a response.
 
 ```
 local multi_val_read  = ngx.header["My-Multi-Value-Header"]
@@ -1097,9 +1097,9 @@ the last item from the list will be chosen. For instance take the content type h
 
 `ngx.header.content_type = 'b'`
 
-Although a ngx.header looks and behaves like a table it is not.The ngx.header does not return an iteratable lua table. For that purpose use:-
+Although an ngx.header looks and behaves like a table it is not.The ngx.header does not return an iteratable lua table. For that purpose use:-
 
-`ngx.resp.get_headers()` which is quite simillar to `ngx.req.get_headers()`.
+`ngx.resp.get_headers()` which is quite similar to `ngx.req.get_headers()`.
 
 It simply returns a list of response headers that will be sent to the client. The value returned is a proper lua
 table which can be iterated upon.
@@ -1127,13 +1127,13 @@ ngx.status = ngx.HTTP_NOT_MODIFIED -- set the status code to 304. Using ngx cons
 
 **The body of the response**
 
-Unlike response headers and response status there is no prepping stage for the response body.That is there is no `ngx.res.body()` method where you can set the body before sending the response. Openresty instead offeres two methods in `ngx.say()`
- and `ngx.print()` any argument to the methods will be joined and sent as the res body. It is also important to note that calling any one of these methods means that the response will be sent back to the clinet. So the response headers and the response status that you have prepared up to this point will be sent back to the client.
+Unlike response headers and response status there is no prepping stage for the response body.That is there is no `ngx.res.body()` method where you can set the body before sending the response. Openresty instead offers two methods in `ngx.say()`
+ and `ngx.print()` any argument to the methods will be joined and sent as the res body. It is also important to note that calling any one of these methods means that the response will be sent back to the client. So the response headers and the response status that you have prepared up to this point will be sent back to the client once you call print() or say().
 
 ```
 ngx.print("Hello world") --sends  Hello world
 ngx.say("Hello world") -- sends Hello world/n that is the body appended with a newline
-ngx.say(cjson.encode({a=1,b=2})) -- you can also send json in the repsonse body
+ngx.say(cjson.encode({a=1,b=2})) -- you can also send json in the response body
 
 ```
 
@@ -1153,7 +1153,7 @@ There is however another method that involves configuring nginx conf file to tel
 
 and now all your errors will be logged to the terminal.
 
-But error logs are only effective when an error occurs in our program. What if we want to say quyickly see the value of a variable? For these cases we can use a combination of `ngx.log()` and the nginx's logging constants to write to the error log. For instance we can do this:-
+But error logs are only effective when an error occurs in our program. What if we want to say quickly see the value of a variable? For these cases we can use a combination of `ngx.log()` and the nginx's logging constants to write to the error log. For instance we can do this:-
 
 ```
 local body = res.body
@@ -1161,7 +1161,7 @@ ngx.log(ngx.ERR,body)
 
 ```
 
-and it will append the body data to the error log. One of the areas where I feel that openresty is lagging in the code inspection part. Unlike it's name  `ngx.print()` does not print to the console but instead outputs the data to the client. Although using a combination of displaying the error log on the console and openresty's log functions we can display results on our terminal but still it is not as good as say `console.log()` in node js. Maybe the tooling for debugging openresty scripts will improve in the future. But it's a minor impedence that does not bother much once you get used to it.
+and it will append the body data to the error log. One of the areas where I feel that openresty is lagging in the code inspection part. Unlike it's name  `ngx.print()` does not print to the console but instead outputs the data to the client. Although using a combination of displaying the error log on the console and openresty's log functions we can display results on our terminal but still it is not as good as say `console.log()` in node js. Maybe the tooling for debugging openresty scripts will improve in the future. But it's a minor impedance that does not bother much once you get used to it.
 
 
 
