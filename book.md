@@ -788,15 +788,14 @@ subrequests to multiple uris with a single line of code. Two important things to
 2) The results are returned when all the subrequests are completed.
 
 So if you were thinking about piping the result of one subrequest into another then you are out of luck.
-But multi req are still pretty cool. Why?
+But multiple requests are still pretty cool. Why?
 
-Consider this scenario:- It would not be an exxageration to say that all applications today use
-some third party apis to as supports for thier main application. Say you have an application where you
-aggregate the results of interesting conversations across the internt. You pull in data from various sources like
-twitter, facebook and linkedin. In this scenario you have to make atleast three seperate http requests to aggregate
+Consider this scenario:-  Say you have an application where you want to 
+collect the  interesting conversations across the Internet. You pull in data from various sources like
+twitter, facebook and linkedin. In this scenario you have to make at least three separate http requests to collect 
 the data. 
 
-So what do you do? Just this:-
+How would you do this in openresty? Like this:-
 
 ```
 local statuses,tweets,posts = ngx.location.capture.multi{{"/facebook_graph"},{"/tweets"},{"/lnkedin"}}
@@ -808,7 +807,7 @@ It is quite probable that internally you use many applications that work on seco
 want to generate a report  by querying them for updates. All you got to do is issue an `ngx.location.capture.multi` and
 you are set.
 
-**Can one use an options table like in the nginx.location.capture?**
+**Can one use an options table like in the nginx.location.capture?** 
 
 Of course you can. Here is how:-
 
