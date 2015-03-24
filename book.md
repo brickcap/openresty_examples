@@ -226,7 +226,7 @@ now `curl http://localhost:8080/by_file` should return
 **Some notes**
 
 1. The directory structure that we used in this example is just a suggestion. It has no bearing whatsoever
-on writing lua scripts. If you have a pretty bug lua application it is likely that your code will be divided
+on writing lua scripts. If you have a pretty big lua application it is likely that your code will be divided
 into specific scripts that execute as directive handlers (like the content_by_lua script that we wrote above) and
 generic modules that will be used across many handlers (like say an authentication module that will be run across multiple content_by_lua handlers)
 2. Openresty follows lua convention of modules. So you can easily package a repeatable unit of code in a file and `require()` the file and use it's functions. We discuss more on this in the [organizing your lua code section](#organization)
