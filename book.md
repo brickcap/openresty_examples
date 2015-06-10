@@ -21,7 +21,7 @@ but it will certainly help you get started*
 6. [Openresty global variable](#openresty_global_var)
 7. [Encoding and decoding JSON](#encode_decode_json)
 8. [Organizing code in openresty](#structuring_openresty_apps)
- 
+9. [Concurrency in openresty](#concurrency_in_openresty) 
 -----
 
 <h1 id="why_openresty">Why openresty?</h1>
@@ -1404,4 +1404,61 @@ and all the configuration files in the parent directory. Simple and straightforw
 
 But if you have a preferred way of organizing your code feel free to do it that way. All that 
 matters is that when you read your code it should be easy for you to understand it. Otherwise use whatever 
-that suits you. 
+that suits you.
+
+<h3 id="concurrency_in_openresty">Concurrency in openresty</h3>
+
+<small><a href="#contents">Back to the contents</a></small>
+
+Openresty supports concurrency on two different levels.
+On nginx level and on lua level. We'll talk about both. Let's start with nginx.
+
+When nginx starts it's execution it spawns a master process. This master process is responsible
+for reading, checking and loading configuration files and communicating with worker processes.
+All of the actual work is done by the worker processes. The number of wroker process are specified in
+the configuration file by the `worker_processes` directive. Generally  one worker process
+per cpu core is used. So far so good.
+
+The handling of requests by the worker processes is much more interesting. Each worker process
+runs in a single thread of execution "reacting" to the signals from the master. Events coming on the
+master process are passed along to the worker processes or stored in a queue from where it is read by the worker process. The worker process handles these events but they don't wait around for them to be completed. When they are notifed
+of the completion they send back the response. This is what it looks like inside nginx
+
+An event happens ----> worker sends the request to be processed in a handler -----> wroker starts servicing other events -----> on completion of event it sends back the response. 
+
+
+
+Concurrency in lua is implemented with the help of  coroutines. A coroutine
+is a lightweight(green) thread that is spawned from the lua's execution envrionment. It is
+important to note that a coroutine is not an os level thread. It is a seprate process with
+it's own stack and a line of execution that is runs in collaboration with lua's exeution loop.
+
+A good explanation of what problems coroutines solve is [given in this stackoverflow answer](http://stackoverflow.com/questions/11490917/coroutines-multiple-requests-in-lua)
+
+> "The problem coroutines resolve is 'I want to have a function I can execute for a while, then go back to do other thing, and then come back and have the same state I had when I left it'.
+
+>"Notice that I didn't say 'I want it to keep running while I do other things"; the flow of code "stops" on the coroutine, and only continues on it when you go back to it.'"
+
+At any time you can only have one croutine running but that corutine can suspend it's execution
+and resume it's execution  from the point where it left. 
+
+
+
+
+**"Syncrhonous yet non blocking everywhere--or how event loops and coroutines come together in openresty"**
+
+We talked about synchronous yet non blocking requeests made by the location_capture api using nginx's powerful subrequests.However this syncrhonous yet non blocking feature is not limited to the location capture api, nearly all of openresty's directives follow this concept.
+
+"But how does it work?"
+
+It is quite simple if you understand how lua's coroutines and nginx's event loop work independantly of each other. All openresty does is to make coroutines in lua cooperate with the nginx's event loop. So let's trace a request through an openresty content_by_lua directive and see where it takes us. 
+
+A good discussion of this concept is on the [openresty google groups](https://groups.google.com/forum/#!msg/openresty-en/7bauQiyG_wI/GZ2oe5ECOqAJ)
+
+>"For every socket read that cannot complete immediately, ngx_lua will
+suspend (or yield) the current Lua coroutine (or "light thread") and
+give the control back to the nginx event loop. When the nginx event
+loop sees new events on the socket in question, then nginx event loop
+will give the control back to ngx_lua and ngx_lua will resume the
+suspended (or yieded) Lua coroutine and continue running its
+subsequent Lua code. "
