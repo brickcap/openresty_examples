@@ -1403,7 +1403,7 @@ lua folder - for the lua code
 and all the configuration files in the parent directory. Simple and straightforward.
 
 But if you have a preferred way of organizing your code feel free to do it that way. All that 
-matters is that when you read your code it should be easy for you to understand it. Otherwise use whatever 
+matters is that when you read your code it should be easy for you to understand it. Apart from that use whatever 
 that suits you.
 
 <h3 id="concurrency_in_openresty">Concurrency in openresty</h3>
@@ -1414,24 +1414,22 @@ Openresty supports concurrency on two different levels.
 On nginx level and on lua level. We'll talk about both. Let's start with nginx.
 
 When nginx starts it's execution it spawns a master process. This master process is responsible
-for reading, checking and loading configuration files and communicating with worker processes.
-All of the actual work is done by the worker processes. The number of wroker process are specified in
+for reading, checking, loading configuration files and communicating with worker processes.
+All of the actual work is done by the worker processes. The number of worker process is specified in
 the configuration file by the `worker_processes` directive. Generally  one worker process
 per cpu core is used. So far so good.
 
 The handling of requests by the worker processes is much more interesting. Each worker process
 runs in a single thread of execution "reacting" to the signals from the master. Events coming on the
-master process are passed along to the worker processes or stored in a queue from where it is read by the worker process. The worker process handles these events but they don't wait around for them to be completed. When they are notifed
+master process are passed along to the worker processes or stored in a queue from where it is read by a worker process. The worker process handles these events but they don't wait around for them to be completed. When they are notified
 of the completion they send back the response. This is what it looks like inside nginx
 
-An event happens ----> worker sends the request to be processed in a handler -----> wroker starts servicing other events -----> on completion of event it sends back the response. 
-
-
+An event happens ----> worker sends the request to be processed in a handler -----> worker starts servicing other events -----> on completion of event it sends back the response. 
 
 Concurrency in lua is implemented with the help of  coroutines. A coroutine
-is a lightweight(green) thread that is spawned from the lua's execution envrionment. It is
-important to note that a coroutine is not an os level thread. It is a seprate process with
-it's own stack and a line of execution that is runs in collaboration with lua's exeution loop.
+is a lightweight(green) thread that is spawned from the lua's execution environment. It is
+important to note that a coroutine is not an os level thread. It is a separate process with
+it's own stack and a line of execution that is runs in collaboration with lua's execution loop.
 
 A good explanation of what problems coroutines solve is [given in this stackoverflow answer](http://stackoverflow.com/questions/11490917/coroutines-multiple-requests-in-lua)
 
@@ -1439,13 +1437,42 @@ A good explanation of what problems coroutines solve is [given in this stackover
 
 >"Notice that I didn't say 'I want it to keep running while I do other things"; the flow of code "stops" on the coroutine, and only continues on it when you go back to it.'"
 
-At any time you can only have one croutine running but that corutine can suspend it's execution
-and resume it's execution  from the point where it left. 
+At any time you can only have one coroutine running but that coroutine can suspend it's execution
+and resume it from the point where it left. 
+
+**"Synchronous yet non blocking everywhere--or how event loops and coroutines come together in openresty"**
+
+One of things about lua's coroutines is that the responsibility of scheduling them lies upon the programmer. That is to say they are not scheduled by the language run time. Openresty introduces a concept of light threads which are just lua's coroutines scheduled by the ngx_lua environment.
+
+Openresty's directives-- content_by_lua,rewrite_by_lua,access_by_lua are run independently in their own light threads. Scheduling and other thread level management tasks are handled by ngx_lua run time on your behalf. You don't have to write any code for spawning or aborting the execution thread. So when in a location block you do:
+
+```
+location /some_location {
+content_by_lua 'ngx.say("hello")';
+}
 
 
+```
+
+The code inside the content_by_lua directive handler is run in it's own thread. That thread is automatically created for you by the ngx_lua run time.
+
+Not all directives are run in this way though. One example of this is the set_by_lua directive which is blocking. You can do a quick check in the official openresty manual to see which directives are run in their own coroutines and which are not.
 
 
-**"Syncrhonous yet non blocking everywhere--or how event loops and coroutines come together in openresty"**
+Since most of the "heavy" code for an openresty application is written within these three directives(access,content and rewrite) majority of your application would be concurrent by default. You've just got to be careful around those directives that are blocking. 
 
-We talked about synchronous yet non blocking requeests made by the location_capture api using nginx's powerful subrequests.However this syncrhonous yet non blocking feature is not limited to the location capture api, nearly all of openresty's directives follow this concept.
+**The luaJIT VM**
+
+There is one more level of concurrency introduced by openresty that we should discuss here. This works on the luaJIT VM level. All the lua code in openresty is executed by luaJIT. Just in case you didn't know [LuaJIT](http://luajit.org/) is a just in time compiler for lua renowned for it's speed and efficiency. Openresty spawns a sandboxed luaJIT execution environment for every nginx worker process. 
+
+Since we usually keep a worker thread per cpu core. So this more or less means one luaJIT VM per cpu core. Now we have everything we need to understand the concurrency model of openresty. 
+
+
+1. The nginx master process handles the configuration files and passes along the signals to...
+2. The worker process which are responsible to run "event_handlers". Openresty starts a luaJIT VM for each of the worker processes.
+3. The lua "directive handlers" are executed by the luaJIT VM corresponding to the worker process.
+4. Some of these lua_directives( "content_by_lua","access_by_lua" and "rewrite_by_lua" to be specific) are run in light threads which are scheduled by the ngx_lua runtime. It must be kept in mind that these are not OS level threads but rather threads on the luaJIT VM level. Light, efficient quick to create and destroy and managed by the ngx_lua instead of the programmer.
+5. Finally within the lua code concurrency is achieved with the help of the thread api (manually) and also by using location capture api (automatically)
+
+All in all it is very difficult to write blocking code in openresty :)
 
