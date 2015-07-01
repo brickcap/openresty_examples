@@ -1449,16 +1449,3 @@ and resume it's execution  from the point where it left.
 
 We talked about synchronous yet non blocking requeests made by the location_capture api using nginx's powerful subrequests.However this syncrhonous yet non blocking feature is not limited to the location capture api, nearly all of openresty's directives follow this concept.
 
-"But how does it work?"
-
-It is quite simple if you understand how lua's coroutines and nginx's event loop work independantly of each other. All openresty does is to make coroutines in lua cooperate with the nginx's event loop. So let's trace a request through an openresty content_by_lua directive and see where it takes us. 
-
-A good discussion of this concept is on the [openresty google groups](https://groups.google.com/forum/#!msg/openresty-en/7bauQiyG_wI/GZ2oe5ECOqAJ)
-
->"For every socket read that cannot complete immediately, ngx_lua will
-suspend (or yield) the current Lua coroutine (or "light thread") and
-give the control back to the nginx event loop. When the nginx event
-loop sees new events on the socket in question, then nginx event loop
-will give the control back to ngx_lua and ngx_lua will resume the
-suspended (or yieded) Lua coroutine and continue running its
-subsequent Lua code. "
