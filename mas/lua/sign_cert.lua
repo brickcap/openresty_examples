@@ -1,0 +1,7 @@
+--http://stackoverflow.com/questions/4294689/how-to-generate-an-openssl-key-using-a-passphrase-from-the-command-line
+-- http://nategood.com/client-side-certificate-authentication-in-ngi
+-- http://www.freebsdmadeeasy.com/tutorials/freebsd/create-a-ca-with-openssl.php
+-- http://superuser.com/questions/226192/openssl-without-prompt
+-- https://arcweb.co/securing-websites-nginx-and-client-side-certificate-authentication-linux/
+--    http://nginx.org/en/docs/http/ngx_http_ssl_module.html#ssl_crl
+-- local 
