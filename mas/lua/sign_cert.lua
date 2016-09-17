@@ -13,4 +13,7 @@
 -- openssl  genrsa  -des3 -passout pass:abba -out ../utils/test_certs/ca.key 
 --For generating the Certificate Authority certificate--
 --openssl req -new -x509 -days 365 -key ../utils/test_certs/ca.key  -passin pass:abba -out ../utils/test_certs/ca.cert -subj "/C=IN/ST=HR/L=GGN/O=wrinq/CN=www.wrinq.com"
+-- Decoding the certificate subject line --
+-- openssl x509 -noout -subject -in ../utils/test_certs/ca.cert
+
 -- local 
