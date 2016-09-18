@@ -26,8 +26,9 @@
 
 
 --- executing these commands with lua
-
---local handle = io.popen("openssl x509 -noout -subject -in ../utils/test_certs/ca.cert")
--- local read = handle:read()
-
+local cjson = require("cjson")
+local handle = io.popen("openssl x509 -req -days 365 -in utils/test_certs/client.csr -CA utils/test_certs/ca.cert -CAkey utils/test_certs/ca.key -passin pass:abba -set_serial 01")
+ local read = handle:read("*a")
+ ngx.log(ngx.ERR,read)
+ ngx.say("whoo")
 -- local 
