@@ -1,6 +1,7 @@
 ssl_certificate      ./utils/test_certs/test_cert.pem;
 ssl_certificate_key  ./utils/test_certs/test_key.pem;
-
+ssl_client_certificate      ./utils/test_certs/ca.cert;
+ssl_verify_client	    on; 
 ssl_session_timeout  5m;
 
 ssl_protocols  SSLv2 SSLv3 TLSv1 TLSv1.2 TLSv1.1;
