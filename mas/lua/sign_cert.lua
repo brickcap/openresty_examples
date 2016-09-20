@@ -1,7 +1,7 @@
 local cjson = require("cjson")
 local res_state = io.popen("utils/scripts/restore_state.sh")
 local client_cert = io.popen("utils/scripts/cert.sh")
-
+ngx.say("Certificates have been created")
 -- Research material -- 
 -- http://stackoverflow.com/questions/4294689/how-to-generate-an-openssl-key-using-a-passphrase-from-the-command-line
 -- http://nategood.com/client-side-certificate-authentication-in-ngi
