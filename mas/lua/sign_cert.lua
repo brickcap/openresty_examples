@@ -27,8 +27,10 @@
 
 --- executing these commands with lua
 local cjson = require("cjson")
-local handle_key = io.popen("cat utils/test_certs/client.key")
-local file_cert = io.popen("strace utils/scripts/cert.sh")
+local res_state = io.popen("utils/scripts/restore_state.sh")
+local client_cert = io.popen("utils/scripts/cert.sh")
+ngx.log(ngx.ERR,client_cert:read("*a"))
+
 --ngx.say("whoo")
 -- local cert_read = file_cert:read("*a")
 -- local key_read = handle_key:read("*a")
