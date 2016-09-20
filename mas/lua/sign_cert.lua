@@ -1,3 +1,7 @@
+local cjson = require("cjson")
+local res_state = io.popen("utils/scripts/restore_state.sh")
+local client_cert = io.popen("utils/scripts/cert.sh")
+
 -- Research material -- 
 -- http://stackoverflow.com/questions/4294689/how-to-generate-an-openssl-key-using-a-passphrase-from-the-command-line
 -- http://nategood.com/client-side-certificate-authentication-in-ngi
@@ -9,6 +13,7 @@
 -- http://unix.stackexchange.com/questions/103461/get-common-name-cn-from-ssl-certificate
 
 -- SSL commands used --
+
 --For generating the Certificate Authority Key--
 -- openssl  genrsa  -des3 -passout pass:abba -out ../utils/test_certs/ca.key 4096
 --For generating the Certificate Authority certificate--
@@ -24,16 +29,8 @@
 -- Decoding the certificate subject line --
 -- openssl x509 -noout -subject -in ../utils/test_certs/ca.cert
 
+--Verify a certificate --
+-- openssl verify -CAfile ../utils/test_certs/ca.cert ../utils/test_certs/shail.cert 
 
---- executing these commands with lua
-local cjson = require("cjson")
-local res_state = io.popen("utils/scripts/restore_state.sh")
-local client_cert = io.popen("utils/scripts/cert.sh")
-ngx.log(ngx.ERR,client_cert:read("*a"))
-
---ngx.say("whoo")
--- local cert_read = file_cert:read("*a")
--- local key_read = handle_key:read("*a")
--- ngx.log(ngx.ERR,read)
--- ngx.say(cjson.encode({cert = cert_read,key=key_read}))
--- local 
+-- Check via curl--
+-- curl -v -s -k --key client.key --cert client.crt https://example.com
