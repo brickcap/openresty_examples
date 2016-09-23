@@ -3,7 +3,7 @@ ssl_certificate_key  ./utils/test_certs/test_key.pem;
 ssl_client_certificate      ./utils/test_certs/ca.cert;
 ssl_verify_client	    on; 
 ssl_session_timeout  5m;
-
+ssl_crl  ./utils/test_certs/crl.pem;
 ssl_protocols  SSLv2 SSLv3 TLSv1 TLSv1.2 TLSv1.1;
 ssl_ciphers  ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
 ssl_prefer_server_ciphers   on;
