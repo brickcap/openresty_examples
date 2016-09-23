@@ -34,3 +34,10 @@ ngx.say("Certificates have been created")
 
 -- Check via curl--
 -- curl -v -s -k --key client.key --cert client.crt https://example.com
+
+-- Revoke the certificate --
+-- openssl ca -cert utils/test_certs/ca.cert -keyfile utils/test_certs/ca.key -passin pass:abba -config utils/test_certs/ssl.cnf -revoke utils/test_certs/client.cert
+
+-- Create a CRL --
+-- Make sure to create a crlnumber file with an entry 01 ---
+--openssl ca -cert utils/test_certs/ca.cert -keyfile utils/test_certs/ca.key -passin pass:abba -config utils/test_certs/ssl.cnf -gencrl -out utils/test_certs/crl.pem
