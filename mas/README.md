@@ -117,7 +117,7 @@ Here's the response:-
 
 ```
 
-Once more a bad request tells us that the certificate has been rejected. Therefore its clear that our server only recognizes requests with a valid client certificate. And summarily rejects any other request made to it. 
+Once more a bad request tells us that the certificate has been rejected. Therefore its clear that our server only recognizes requests with a valid client certificate and summarily rejects any other request made to it. 
 
 Feel free to go through the code and the configuration files to understand how the nginx server can be configured to accept client certificates. How a parsed certificate can be used to perform additional checks on the certificate holder using just a few lines of openresty. Also don't forget to check out detailed explanations in the posts [client side and proxy ssl certificates in nginx](http://staticshin.com/programming/proxy-ssl-cert-in-nginx.html) and [building mutual authentication systems with openresty](http://staticshin.com/programming/mutual_authentication_systems.html)
 
