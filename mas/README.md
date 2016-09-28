@@ -15,9 +15,9 @@ If everything works out you should have the application should be running on por
 
 This application exposes two relevant endpoints:-
 
-1. `/sign-cert` - Spawns a shell process to create a certificate for the client. After which it digitally signs it using a CA certificate present in the utils/test_certs/ directory. Please note that the distinguished name requred for the client certificate is hard coded. Further the errors the output from the shell process is not checked for errors. This example is only meant to be used as an illustration of concept. Please review and modify the code to suit your requirements. 
+1. `/sign-cert` - Spawns a shell process to create a certificate for the client. After which it digitally signs it using a CA certificate present in the utils/test_certs/ directory. Please note that the distinguished name required for the client certificate is hard coded. Further the errors the output from the shell process is not checked for errors. This example is only meant to be used as an illustration of concept. Please review and modify the code to suit your requirements. 
 
-2. `/test-client-cert` is ,as the name suggests, used to test the client certificate. If a correct client certificate is passed to the endpoint it responds with the distiniguished name of both the client certificate and the CA that was used to sign this certificate.
+2. `/test-client-cert` is ,as the name suggests, used to test the client certificate. If a correct client certificate is passed to the endpoint it responds with the distinguished name of both the client certificate and the CA that was used to sign this certificate.
 
 You can check out the definition of these endpoints in the routes/app_routes.conf file.
 
@@ -32,7 +32,7 @@ Certificates have been created
 
 ```
 
-A successful call to the /sign-cert endpoint simply creates the client_new.key, client_new.cst and shail.cert files in the utils/test_certs directory.
+A successful call to the /sign-cert endpoint simply creates the client_new.key, client_new.csr and shail.cert files in the utils/test_certs directory.
 
 Now make a curl request to the /test-client-cert endpoint passing the key and certificate files that we generated in the previous step
 
@@ -48,7 +48,7 @@ The issuer dn is:  /C=IN/ST=HR/L=GGN/O=wrinq/CN=www.wrinq.com
 
 ```
 
-To verfiy that the application only accepts client certificates that are signed by the CA we need ensure that all other certificates are rejected by the server. This can be done by performing two simple tests:- 
+To verify that the application only accepts client certificates that are signed by the CA we need ensure that all other certificates are rejected by the server. This can be done by performing two simple tests:- 
 
 1. That a self signed certificate is rejected by our server
 2. That a certificate in the crl (certificate revocation list) is also rejected by the server.
@@ -98,7 +98,7 @@ Here's the response:-
 
 Once more a bad request indicates that the certificate has been rejected.
 
-Feel free to go through the code and the configuration files to understand how the nginx server can be configured to accept client certificates. How a parsed certificate can be used to perform additional checks on the certificate holder using just a few lines of openresty. Also don't forget to check out detailed explainations in the posts [client side and proxy ssl certificates in nginx](http://staticshin.com/programming/proxy-ssl-cert-in-nginx.html) and [building mutual authentication systems with openresty](http://staticshin.com/programming/mutual_authentication_systems.html)
+Feel free to go through the code and the configuration files to understand how the nginx server can be configured to accept client certificates. How a parsed certificate can be used to perform additional checks on the certificate holder using just a few lines of openresty. Also don't forget to check out detailed explanations in the posts [client side and proxy ssl certificates in nginx](http://staticshin.com/programming/proxy-ssl-cert-in-nginx.html) and [building mutual authentication systems with openresty](http://staticshin.com/programming/mutual_authentication_systems.html)
 
 
 -------
