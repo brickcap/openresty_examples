@@ -1,2 +1,5 @@
 logs
 node_modules
+/mas/utils/test_certs/shail.cert
+/mas/utils/test_certs/client_new.csr
+/mas/utils/test_certs/client_new.key
