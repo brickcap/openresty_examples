@@ -1,6 +1,6 @@
 local cjson = require("cjson")
-local res_state = io.popen("utils/scripts/restore_state.sh")
-local client_cert = io.popen("utils/scripts/cert.sh")
+local res_state = io.popen("rm utils/test_certs/client_new.key utils/test_certs/client_new.csr utils/test_certs/shail.cert ")
+local client_cert = io.popen('openssl  genrsa  -des3 -passout pass:abba -out utils/test_certs/client_new.key 1024 && openssl req -new -key utils/test_certs/client_new.key -out utils/test_certs/client_new.csr -passin pass:abba -subj "/C=IN/ST=HR/L=GGN/O=wrinq/CN=www.wrinq.com/emailAddress=akshat@wrinq.com" && openssl x509 -req -days 365 -in utils/test_certs/client_new.csr -CA utils/test_certs/ca.cert -CAkey utils/test_certs/ca.key -passin pass:abba -set_serial 01 -out utils/test_certs/shail.cert')
 ngx.say("Certificates have been created")
 -- Research material -- 
 -- http://stackoverflow.com/questions/4294689/how-to-generate-an-openssl-key-using-a-passphrase-from-the-command-line
