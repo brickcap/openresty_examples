@@ -1,0 +1,1 @@
+The certificates contained in this directory are self signed and were generated (using openssl) only to demonstrate how "https" is configured in openresty. Feel free to use them during development and for testing purposes. Please don't use them in production. 
