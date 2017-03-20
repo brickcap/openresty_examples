@@ -1,6 +1,9 @@
-local moongoo = require("resty.mongol")
-local mg, err = moongoo.new("mongodb://user:password@hostname/?w=2")
-if not mg then
-  error(err)
+local mongol = require("resty.mongol")
+local cjson = require("cjson")
+local con = mongol:new()
+local ok,err = con:connect("127.0.0.1",27017)
+if err then
+   ngx.log(ngx.ERR,err)
 end
-ngx.say("connected")
+local db = con:new_db_handle("wow")
+ngx.say(cjson.encode(con:databases()))
