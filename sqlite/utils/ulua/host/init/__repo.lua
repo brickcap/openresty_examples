@@ -26,6 +26,19 @@ return {
       version_dir = "7_42_1+3"
     }
   },
+  clib_sqlite3 = {
+    {
+      description = "SQLite Database",
+      homepage = "https://www.sqlite.org/",
+      license = "public domain",
+      name = "clib_sqlite3",
+      require = {
+        luajit = "2.0"
+      },
+      version = "3.9.2",
+      version_dir = "3_9_2"
+    }
+  },
   csv = {
     {
       description = "csv : CSV and other delimited file reading",
@@ -65,6 +78,21 @@ return {
       },
       version = "1.6.3-203",
       version_dir = "1_6_3+203"
+    }
+  },
+  ljsqlite3 = {
+    {
+      description = "SQlite3 interface",
+      homepage = "http://scilua.org/ljsqlite3.html",
+      license = "MIT <http://opensource.org/licenses/MIT>",
+      name = "ljsqlite3",
+      require = {
+        clib_sqlite3 = "3",
+        luajit = "2.0",
+        xsys = "1.0"
+      },
+      version = "1.0.2",
+      version_dir = "1_0_2"
     }
   },
   lsqlite3complete = {
@@ -131,6 +159,19 @@ return {
       },
       version = "1-103",
       version_dir = "1+103"
+    }
+  },
+  xsys = {
+    {
+      description = "extended Lua system",
+      homepage = "http://scilua.org/xsys.html",
+      license = "MIT <http://opensource.org/licenses/MIT>",
+      name = "xsys",
+      require = {
+        luajit = "2.0"
+      },
+      version = "1.0.2",
+      version_dir = "1_0_2"
     }
   }
 }
