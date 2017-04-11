@@ -2,7 +2,7 @@ local sqlite3 = require("./utils/ulua/lsqlite3complete/0_9_4+203/Linux/x64/-lsql
 local rows = {}
 db_mem = sqlite3.open_memory()
 
-optbl = {
+local optbl = {
    [sqlite3.UPDATE] = "UPDATE";
    [sqlite3.INSERT] = "INSERT";
    [sqlite3.DELETE] = "DELETE"
@@ -13,7 +13,7 @@ setmetatable(optbl,
 -- we can use nginx shared dictionary to pass the data
 --from the location blocks to the update_hook
 
-udtbl = {0, 0, 0}
+local udtbl = {0, 0, 0}
 
 
 db_mem:update_hook( function(ud, op, dname, tname, rowid)

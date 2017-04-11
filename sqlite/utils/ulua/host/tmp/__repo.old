@@ -54,6 +54,19 @@ return {
       version_dir = "1_6_3+203"
     }
   },
+  lsqlite3complete = {
+    {
+      description = "lsqlite3complete : A binding for Lua to the SQLite3 database library",
+      homepage = "http://lua.sqlite.org/",
+      license = "MIT",
+      name = "lsqlite3complete",
+      require = {
+        luajit = "2.0"
+      },
+      version = "0.9.4-203",
+      version_dir = "0_9_4+203"
+    }
+  },
   luajit = {
     {
       description = "LuaJIT: Just-In-Time Compiler (JIT) for Lua",

@@ -26,6 +26,19 @@ return {
       version_dir = "7_42_1+3"
     }
   },
+  csv = {
+    {
+      description = "csv : CSV and other delimited file reading",
+      homepage = "http://github.com/geoffleyland/lua-csv",
+      license = "MIT/X11",
+      require = {
+        luajit = "2.0",
+        test = "1-103"
+      },
+      version = "1-103",
+      version_dir = "1+103"
+    }
+  },
   lcurl = {
     {
       description = "cURL: Lua binding to libcurl",
@@ -105,6 +118,19 @@ return {
       },
       version = "0.28-103",
       version_dir = "0_28+103"
+    }
+  },
+  test = {
+    {
+      description = "csv : CSV and other delimited file reading",
+      homepage = "http://github.com/geoffleyland/lua-csv",
+      license = "MIT/X11",
+      require = {
+        csv = "1-103",
+        luajit = "2.0"
+      },
+      version = "1-103",
+      version_dir = "1+103"
     }
   }
 }
