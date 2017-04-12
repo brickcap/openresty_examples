@@ -7,23 +7,35 @@ function browseFolder(root)
    for entity in lfs.dir(root) do
       if entity~="." and entity~=".." then
 	 local fullPath=root..DIR_SEP..entity
+	 if root:find("luajit") then
+	    return
+	 end
 	 local mode=lfs.attributes(fullPath,"mode")
-	 local win,osx,x86,doc,ex,man,t = root:find("Windows"),
+	 local win,osx,x86,doc,ex,man,t,ljit = root:find("Windows"),
 	 root:find("OSX"),
 	 root:find("x86"),
 	 root:find("__doc"),
 	 root:find("__examples"),
 	 root:find("manual"),
 	 root:find("__t")
-	 local f_cond = win or osx or x86 or doc or ex or man or  t
+
+	 local f_cond = win
+	    or osx
+	    or x86
+	    or doc
+	    or ex
+	    or man
+	    or  t
+
 	 if mode=="file" and not f_cond then
 	    --this is where the processing happens. I print the name of the file and its path but it can be any code    
-	    local p_path = ";"..root.."/?.lua"..";"..root.."/?.so"
-	    local p_cond = package.path:find(p_path)
+	    local p_path = ";"..root.."/?.lua"..";"..root.."/?.so"..";"..root.."/init.lua"
+	    local p_cond = package.path:find(p_path,1,true)
 	    
 	    if not p_cond then
 	       package.path = package.path ..p_path
 	    end
+
 	 elseif mode=="directory" then
 	    browseFolder(fullPath);
 	 end
