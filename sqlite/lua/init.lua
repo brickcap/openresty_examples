@@ -1,6 +1,7 @@
 cjson = require "cjson"
-local lfs = require "./utils/ulua/lfs/1_6_3+203/Linux/x64/-lfs"
-
+package.path = package.path .. ";./utils/ulua/compiled_libs/?/?.lua"
+package.path = package.path .. ";./utils/ulua/compiled_libs/?/init.lua"
+package.path = package.path .. ";./utils/ulua/compiled_libs/?/?.so"
 -- package.path = package.path .. ";./utils/ulua/?/init.lua"
 -- package.path = package.path .. ";./utils/ulua/?/?.lua"
 -- package.path = package.path .. ";./utils/ulua/?"
