@@ -135,6 +135,20 @@ return {
       version_dir = "1_0_beta10"
     }
   },
+  pl = {
+    {
+      description = "penlight : Lua utility libraries loosely based on the Python standard libraries",
+      homepage = "http://stevedonovan.github.com/Penlight",
+      license = "MIT/X11",
+      name = "pl",
+      require = {
+        lfs = "1.6.3-2",
+        luajit = "2.0"
+      },
+      version = "1.4.1-103",
+      version_dir = "1_4_1+103"
+    }
+  },
   serpent = {
     {
       description = "serpent : Lua serializer and pretty printer",
