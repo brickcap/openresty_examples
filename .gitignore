@@ -4,3 +4,4 @@ node_modules
 /mas/utils/test_certs/client_new.csr
 /mas/utils/test_certs/client_new.key
 /sqlite/json
+/sqlite/utils/ulua/json
