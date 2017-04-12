@@ -11,7 +11,8 @@ function browseFolder(root)
 	 if mode=="file" then
 	    --this is where the processing happens. I print the name of the file and its path but it can be any code
 	    table.insert(dirs,root.."/"..entity)
-	    print(root.."/"..entity)
+	    local p_path = ";"..root.."/?.lua"
+	    package.path = package.path ..p_path
 	 elseif mode=="directory" then
 	    browseFolder(fullPath);
 	 end
