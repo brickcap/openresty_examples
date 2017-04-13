@@ -303,6 +303,19 @@ return {
       version_dir = "1+103"
     }
   },
+  wsapi = {
+    {
+      description = "wsapi : Lua Web Server API",
+      homepage = "http://www.keplerproject.org/wsapi",
+      license = "MIT/X11",
+      require = {
+        lfs = "1.6.2",
+        luajit = "2.0"
+      },
+      version = "1.6.1-103",
+      version_dir = "1_6_1+103"
+    }
+  },
   xavante = {
     {
       description = "xavante : Lua Web Server Library",

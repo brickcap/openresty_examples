@@ -119,6 +119,21 @@ return {
       version_dir = "1+103"
     }
   },
+  json = {
+    {
+      description = "luajson : customizable JSON decoder/encoder",
+      homepage = "http://github.com/harningt/luajson",
+      license = "MIT/X11",
+      name = "json",
+      require = {
+        lpeg = "0.8.1",
+        luajit = "2.0",
+        re = "0.8.1"
+      },
+      version = "1.3.4-103",
+      version_dir = "1_3_4+103"
+    }
+  },
   lcurl = {
     {
       description = "cURL: Lua binding to libcurl",
@@ -160,6 +175,19 @@ return {
       },
       version = "1.0.2",
       version_dir = "1_0_2"
+    }
+  },
+  lpeg = {
+    {
+      description = "lpeg : Parsing Expression Grammars For Lua",
+      homepage = "http://www.inf.puc-rio.br/~roberto/lpeg.html",
+      license = "MIT/X11",
+      require = {
+        luajit = "2.0",
+        re = "0.12.2-103"
+      },
+      version = "0.12.2-103",
+      version_dir = "0_12_2+103"
     }
   },
   lsqlite3complete = {
@@ -242,6 +270,19 @@ return {
       },
       version = "1.4.1-103",
       version_dir = "1_4_1+103"
+    }
+  },
+  re = {
+    {
+      description = "lpeg : Parsing Expression Grammars For Lua",
+      homepage = "http://www.inf.puc-rio.br/~roberto/lpeg.html",
+      license = "MIT/X11",
+      require = {
+        lpeg = "0.12.2-103",
+        luajit = "2.0"
+      },
+      version = "0.12.2-103",
+      version_dir = "0_12_2+103"
     }
   },
   sajax = {
