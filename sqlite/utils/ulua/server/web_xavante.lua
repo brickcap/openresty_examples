@@ -59,6 +59,7 @@ local query_handler = function(req,res)
    for row in db_json:nrows('select json_extract(host.listings,"$.id") from host;') do 
       table.insert(r_val,row.listings)
    end
+   print(db:errmsg())
    res.content = r_val
    return res
 end

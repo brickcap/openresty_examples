@@ -8,8 +8,14 @@ if ! [ -z ${BIT+x} ]; then
     echo "ERROR: BIT=$BIT is not a valid setting, use 32 or 64" 1>&2 && exit 1
   fi
 else
-  LJ_ARCH="x86"
+    V=$(uname -i)
+    if V=="x86_64"; then
+	LJ_ARCH="x64"
+    else
+	LJ_ARCH="x86"
+    fi
 fi
+echo $LJ_ARCH
 LJ_VER_EXT="luajit/2_1_head20151128"
 LUA_ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 if [ "$(uname)" == "Darwin" ]; then
