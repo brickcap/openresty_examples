@@ -3,11 +3,10 @@ local xavante_fh = require "xavante.filehandler"
 local lsqlite3 = require "lsqlite3complete"
 local csv = require "csv"
 local json = require "json"
-
+local pl = require "pl"
 
 local db_json = lsqlite3.open("json")
-db_json:exec("Drop Table host;")
-db_json:exec("CREATE TABLE host (id INTEGER PRIMARY KEY, listings TEXT );")      
+   
 
 
 local insert =  function (insert_stmt,data)
@@ -22,8 +21,10 @@ local check_func = function()
 end
 
 local root_handler = function(req,res)
+   db_json:exec("Drop Table host;")
+   db_json:exec("CREATE TABLE host (id INTEGER PRIMARY KEY, listings TEXT );")   
    local file = csv.open("./data/greece_listings.csv",{header=true})
-    db_json:exec("BEGIN TRANSACTION")   
+   db_json:exec("BEGIN TRANSACTION")   
    local insert_stmt = assert(db_json:prepare("INSERT INTO host VALUES (NULL, ?);") )
    for field in file:lines() do
        insert(insert_stmt,json.encode(field))      
@@ -37,6 +38,9 @@ local root_handler = function(req,res)
    end   
    return res
 end
+
+local query_handler = function(req,res)
+   for k,v in pa
 
 xavante.HTTP {
    server = { host = "*", port = 5000 },
