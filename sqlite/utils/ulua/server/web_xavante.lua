@@ -10,7 +10,11 @@ local json = require "json"
 local pl = require "pl"
 local inspect = require "inspect"
 local db_json = lsqlite3.open("json")
+local res = db_json:load_extension("./json1")
 
+if res then
+   print("json1 extension loaded")
+end
 
 
 
@@ -49,17 +53,18 @@ local query_handler = function(req,res)
    local r_val = {}
    local data = json.decode(req.socket:receive(req.headers["content-length"]))
    print(inspect(data))
-   local sql = string.format([[
+   local q_smt = assert(db_json:prepare([[
 	    SELECT listings from host, 
 	    json_tree(host.listings)
-	    WHERE json_tree.key=%s
-	       and json_tree.value=%s;]],
-      data.query.key,data.query.value)
+	    WHERE json_tree.key=?
+	       and json_tree.value=?;]]))
 
-   for row in db_json:nrows('select json_extract(host.listings,"$.id") from host;') do 
+   q_smt:bind_values(data.query.key,data.query.value)
+   
+   for row in q_smt:nrows() do 
       table.insert(r_val,row.listings)
    end
-   print(db:errmsg())
+   res.headers["Content-type"] = "application/json"
    res.content = r_val
    return res
 end
