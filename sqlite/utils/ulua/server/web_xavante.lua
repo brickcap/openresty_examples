@@ -45,10 +45,22 @@ local root_handler = function(req,res)
 end
 
 local query_handler = function(req,res)
-   print(inspect(req))
-   local data = req.socket:receive(req.headers["content-length"])
+   print(db_json:changes())
+   local r_val = {}
+   local data = json.decode(req.socket:receive(req.headers["content-length"]))
    print(inspect(data))
-   res.content = "ok"
+   local sql = string.format([[
+	    SELECT listings from host, 
+	    json_tree(host.listings)
+	    WHERE json_tree.key=%s
+	       and json_tree.value=%s;]],
+      data.query.key,data.query.value)
+
+   for row in db_json:nrows('select json_extract(host.listings,"$.id") from host;') do 
+      table.insert(r_val,row.listings)
+   end
+   res.content = r_val
+   return res
 end
 
 xavante.HTTP {
