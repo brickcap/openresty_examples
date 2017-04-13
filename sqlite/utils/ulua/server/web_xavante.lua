@@ -7,7 +7,6 @@ local xavante_fh = require "xavante.filehandler"
 local lsqlite3 = require "lsqlite3complete"
 local csv = require "csv"
 local json = require "json"
-local pl = require "pl"
 local inspect = require "inspect"
 local db_json = lsqlite3.open("json")
 local res = db_json:load_extension("./json1")
@@ -49,10 +48,9 @@ local root_handler = function(req,res)
 end
 
 local query_handler = function(req,res)
-   print(db_json:changes())
    local r_val = {}
    local data = json.decode(req.socket:receive(req.headers["content-length"]))
-   print(inspect(data))
+
    local q_smt = assert(db_json:prepare([[
 	    SELECT listings from host, 
 	    json_tree(host.listings)
@@ -65,7 +63,7 @@ local query_handler = function(req,res)
       table.insert(r_val,row.listings)
    end
    res.headers["Content-type"] = "application/json"
-   res.content = r_val
+   res.content = json.encode({count =#r_val,rows=r_val})
    return res
 end
 
