@@ -3,7 +3,7 @@ local xavante_fh = require "xavante.filehandler"
 local lsqlite3 = require "lsqlite3complete"
 
 local port = 5000
-local db_json = lsqlite3.open("json")
+local udtbl = {}
 
 xavante.HTTP {
    server = { host = "*", port = 5000 },
@@ -12,13 +12,14 @@ xavante.HTTP {
 	 {
 	    match = "/$",
 	    with = function(req, res)
-	       local udtbl
+	       local db_json = lsqlite3.open("json")
+
 	       db_json:exec[[
-  CREATE TABLE host (id INTEGER PRIMARY KEY, item TEXT );
-]]
+		     CREATE TABLE host (id INTEGER PRIMARY KEY, item TEXT );
+			   ]]
 	       db_json:update_hook( function(ud, op, dname, tname, rowid)
 		     local print_val = string.format("%s %s %s %s", optbl[op], dname, tname, rowid)
-		     ngx.say("Sqlite Update Hook:", print_val)
+		     print("Sqlite Update Hook:", print_val)
 				    end, udtbl)
 
 	       db_json:exec[[
