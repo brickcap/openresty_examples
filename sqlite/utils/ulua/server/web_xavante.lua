@@ -1,11 +1,16 @@
+package.path = package.path .. "../?/?.lua;"
+
+
 local xavante = require "xavante"
 local xavante_fh = require "xavante.filehandler"
 local lsqlite3 = require "lsqlite3complete"
 local csv = require "csv"
 local json = require "json"
 local pl = require "pl"
+local inspect = require "inspect"
 local db_json = lsqlite3.open("json")
-package.path = package.path .. ";./?/?.lua"   
+
+
 
 
 local insert =  function (insert_stmt,data)
@@ -26,7 +31,7 @@ local root_handler = function(req,res)
    db_json:exec("BEGIN TRANSACTION")   
    local insert_stmt = assert(db_json:prepare("INSERT INTO host VALUES (NULL, ?);") )
    for field in file:lines() do
-       insert(insert_stmt,json.encode(field))      
+      insert(insert_stmt,json.encode(field))      
    end
    db_json:exec("COMMIT;")
    res.headers["Content-type"] = "text/plain"
@@ -39,7 +44,9 @@ local root_handler = function(req,res)
 end
 
 local query_handler = function(req,res)
-   for k,v in pa
+   print(inspect(req))
+   res.content = "ok"
+end
 
 xavante.HTTP {
    server = { host = "*", port = 5000 },
@@ -48,13 +55,18 @@ xavante.HTTP {
 	 {
 	    match = "/$",
 	    with = root_handler
-	 }, {
+	 },
+	 {
+	    match = "/query",
+	    with = query_handler
+	 },
+	 {
 	    match = ".",
 	    with = xavante_fh,
 	    params = { baseDir = "static/" }
-	    }
+	 }
       }
    }
 }
 
-xavante.start(check_func,300)
+xavante.start(check_func,3)
