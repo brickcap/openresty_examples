@@ -4,9 +4,8 @@ local lsqlite3 = require "lsqlite3complete"
 local csv = require "csv"
 local json = require "json"
 local pl = require "pl"
-
 local db_json = lsqlite3.open("json")
-   
+package.path = package.path .. ";./?/?.lua"   
 
 
 local insert =  function (insert_stmt,data)
