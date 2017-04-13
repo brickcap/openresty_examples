@@ -1,4 +1,5 @@
 package.path = package.path .. "../?/?.lua;"
+package.path = package.path .. "./?/?.lua;"
 
 
 local xavante = require "xavante"
@@ -33,9 +34,9 @@ local root_handler = function(req,res)
    for field in file:lines() do
       insert(insert_stmt,json.encode(field))      
    end
-   db_json:exec("COMMIT;")
+   local code = db_json:exec("COMMIT;")
    res.headers["Content-type"] = "text/plain"
-   if code == 101 then
+   if code == 0 then
       res.content = "done"
    else
       res.content = "failed"
@@ -45,6 +46,8 @@ end
 
 local query_handler = function(req,res)
    print(inspect(req))
+   local data = req.socket:receive(req.headers["content-length"])
+   print(inspect(data))
    res.content = "ok"
 end
 
@@ -69,4 +72,4 @@ xavante.HTTP {
    }
 }
 
-xavante.start(check_func,3)
+xavante.start()
